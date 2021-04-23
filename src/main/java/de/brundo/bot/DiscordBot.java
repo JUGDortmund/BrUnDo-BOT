@@ -2,6 +2,7 @@ package de.brundo.bot;
 
 import de.brundo.bot.commands.CustomDice6Command;
 import de.brundo.bot.commands.CuteDice6Command;
+import de.brundo.bot.commands.Dice10Command;
 import de.brundo.bot.commands.Dice6Command;
 import de.brundo.bot.commands.HelpCommand;
 import de.brundo.bot.commands.KapernCommand;
@@ -28,6 +29,7 @@ public class DiscordBot {
 
         final List<AbstractCommand> commands = new ArrayList<>();
         commands.add(new Dice6Command());
+        commands.add(new Dice10Command());
         commands.add(new CuteDice6Command());
         commands.add(new CustomDice6Command());
         commands.add(new KapernCommand());
