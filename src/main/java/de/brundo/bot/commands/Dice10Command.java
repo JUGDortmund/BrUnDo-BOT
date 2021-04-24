@@ -9,7 +9,7 @@ import java.util.Random;
 public class Dice10Command extends AbstractCommand {
 
     public Dice10Command() {
-        super("w1");
+        super("w10");
     }
 
     @Override
@@ -22,6 +22,6 @@ public class Dice10Command extends AbstractCommand {
 
     @Override
     public String getHelp() {
-        return "Einen W1 würfeln";
+        return "Einen W10 würfeln";
     }
 }

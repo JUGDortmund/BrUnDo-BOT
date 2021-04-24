@@ -1,5 +1,6 @@
 package de.brundo.bot;
 
+import de.brundo.bot.commands.CanIGoToBedCommand;
 import de.brundo.bot.commands.CustomDice6Command;
 import de.brundo.bot.commands.CuteDice6Command;
 import de.brundo.bot.commands.Dice10Command;
@@ -35,6 +36,7 @@ public class DiscordBot {
         commands.add(new KapernCommand());
         commands.add(new SuggestGameCommand());
         commands.add(new TeamsCommand());
+        commands.add(new CanIGoToBedCommand());
         commands.forEach(command -> jda.addEventListener(command));
         jda.addEventListener(new HelpCommand(commands));
         jda.addEventListener(new DebugEventListener());
