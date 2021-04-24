@@ -27,6 +27,14 @@ public class TeamManager {
         }
     }
 
+    public String getRandomAdjective() {
+        return adjectives.get(random.nextInt(adjectives.size()));
+    }
+
+    public String getRandomRace() {
+        return names.get(random.nextInt(names.size()));
+    }
+
     public String getRandomTeamName() {
             return "Die " + adjectives.get(random.nextInt(adjectives.size())) + " " + names.get(random.nextInt(names.size()));
     }

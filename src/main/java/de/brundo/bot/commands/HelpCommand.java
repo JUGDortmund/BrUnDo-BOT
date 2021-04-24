@@ -20,8 +20,12 @@ public class HelpCommand extends AbstractCommand {
     @Override
     protected void onCommand(final MessageReceivedEvent event) {
         final StringBuilder textBuilder = new StringBuilder();
-        textBuilder.append("Folgende Commands stehen zur Verfügung:");
-        textBuilder.append(System.lineSeparator());
+        textBuilder.append("Hi, ich bin **Botti** 🤖 - der freundliche Brettspiel-BOT von nebenan 😀.")
+                .append(System.lineSeparator())
+                .append("Sobald du '!botti' in einem Chat eingibst melde ich mich zur Hilfe.")
+                .append(System.lineSeparator())
+                .append("Ich kann aktuell die folgenden Befehle verstehen:")
+                .append(System.lineSeparator());
         commands.forEach(command -> {
             textBuilder.append("**" + AbstractCommand.EXCLAMATION_MARK + command.getCommand() + "** -> " + command.getHelp());
             textBuilder.append(System.lineSeparator());
