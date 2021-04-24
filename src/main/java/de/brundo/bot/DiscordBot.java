@@ -8,7 +8,9 @@ import de.brundo.bot.commands.Dice6Command;
 import de.brundo.bot.commands.HelpCommand;
 import de.brundo.bot.commands.KapernCommand;
 import de.brundo.bot.commands.SuggestGameCommand;
+import de.brundo.bot.commands.TeamCommand;
 import de.brundo.bot.commands.TeamsCommand;
+import de.brundo.bot.commands.TimerCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -35,8 +37,11 @@ public class DiscordBot {
         commands.add(new CustomDice6Command());
         commands.add(new KapernCommand());
         commands.add(new SuggestGameCommand());
+        commands.add(new TeamCommand());
         commands.add(new TeamsCommand());
         commands.add(new CanIGoToBedCommand());
+        commands.add(new TimerCommand());
+
         commands.forEach(command -> jda.addEventListener(command));
         jda.addEventListener(new HelpCommand(commands));
         jda.addEventListener(new DebugEventListener());
