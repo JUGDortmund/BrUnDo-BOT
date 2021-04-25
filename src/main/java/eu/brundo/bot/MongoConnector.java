@@ -12,7 +12,7 @@ public class MongoConnector {
     public MongoConnector() {
         final MongoClient mongoClient = MongoClients.create(ApplicationEnvironment.getMongoConnection());
         datastore = Morphia.createDatastore(mongoClient, "botti_database");
-        datastore.getMapper().mapPackage("eu.brundo.bot.store");
+        datastore.getMapper().mapPackage("eu.brundo.bot.entities");
         datastore.ensureIndexes();
     }
 

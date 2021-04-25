@@ -2,7 +2,7 @@ package eu.brundo.bot.repositories;
 
 import dev.morphia.query.experimental.filters.Filters;
 import eu.brundo.bot.MongoConnector;
-import eu.brundo.bot.store.MemberEntity;
+import eu.brundo.bot.entities.MemberEntity;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.Objects;

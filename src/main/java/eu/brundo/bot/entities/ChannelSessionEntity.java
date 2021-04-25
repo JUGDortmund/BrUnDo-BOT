@@ -1,4 +1,4 @@
-package eu.brundo.bot.store;
+package eu.brundo.bot.entities;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;

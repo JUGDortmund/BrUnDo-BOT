@@ -1,8 +1,8 @@
-package eu.brundo.bot.data;
+package eu.brundo.bot.services;
 
 import eu.brundo.bot.MongoConnector;
+import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.MemberRepository;
-import eu.brundo.bot.store.MemberEntity;
 import net.dv8tion.jda.api.entities.Member;
 
 public class MemberService {

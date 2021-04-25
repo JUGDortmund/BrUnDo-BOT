@@ -15,7 +15,7 @@ import eu.brundo.bot.commands.TeamCommand;
 import eu.brundo.bot.commands.TeamsCommand;
 import eu.brundo.bot.commands.TieBreakCommand;
 import eu.brundo.bot.commands.TimerCommand;
-import eu.brundo.bot.data.ChannelSessionService;
+import eu.brundo.bot.services.ChannelSessionService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;

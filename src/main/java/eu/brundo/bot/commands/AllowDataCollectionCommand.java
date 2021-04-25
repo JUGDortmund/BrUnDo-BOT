@@ -2,8 +2,8 @@ package eu.brundo.bot.commands;
 
 import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.MongoConnector;
+import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.MemberRepository;
-import eu.brundo.bot.store.MemberEntity;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

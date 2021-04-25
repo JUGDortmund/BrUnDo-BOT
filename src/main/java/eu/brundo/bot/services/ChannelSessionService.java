@@ -1,9 +1,9 @@
-package eu.brundo.bot.data;
+package eu.brundo.bot.services;
 
 import eu.brundo.bot.MongoConnector;
+import eu.brundo.bot.entities.ChannelSessionEntity;
+import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.ChannelSessionRepository;
-import eu.brundo.bot.store.ChannelSessionEntity;
-import eu.brundo.bot.store.MemberEntity;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import org.slf4j.Logger;

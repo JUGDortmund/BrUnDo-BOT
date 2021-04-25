@@ -1,7 +1,7 @@
 package eu.brundo.bot.repositories;
 
 import eu.brundo.bot.MongoConnector;
-import eu.brundo.bot.store.ChannelSessionEntity;
+import eu.brundo.bot.entities.ChannelSessionEntity;
 
 import java.util.Objects;
 
