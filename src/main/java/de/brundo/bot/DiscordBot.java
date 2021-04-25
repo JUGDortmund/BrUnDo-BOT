@@ -1,10 +1,12 @@
 package de.brundo.bot;
 
+import de.brundo.bot.commands.AllowDataCollectionCommand;
 import de.brundo.bot.commands.CanIGoToBedCommand;
 import de.brundo.bot.commands.CustomDice6Command;
 import de.brundo.bot.commands.CuteDice6Command;
 import de.brundo.bot.commands.Dice10Command;
 import de.brundo.bot.commands.Dice6Command;
+import de.brundo.bot.commands.DisableDataCollectionCommand;
 import de.brundo.bot.commands.HelpCommand;
 import de.brundo.bot.commands.KapernCommand;
 import de.brundo.bot.commands.QuoteCommand;
@@ -23,14 +25,12 @@ import java.util.List;
 
 public class DiscordBot {
 
-    private final static String DISCORD_APP_TOKEN_SYS_VAR = "DISCORD_TOKEN";
-
     public DiscordBot(final String discordToken) throws LoginException {
-        JDABuilder builder = JDABuilder.createDefault(discordToken);
-
+        final JDABuilder builder = JDABuilder.createDefault(discordToken);
         builder.setActivity(Activity.playing("Monopoly"));
-
         final JDA jda = builder.build();
+
+        final MongoConnector mongoConnector = new MongoConnector();
 
         final List<AbstractCommand> commands = new ArrayList<>();
         commands.add(new Dice6Command());
@@ -45,14 +45,16 @@ public class DiscordBot {
         commands.add(new TimerCommand());
         commands.add(new TieBreakCommand());
         commands.add(new QuoteCommand());
-        
+        commands.add(new AllowDataCollectionCommand(mongoConnector));
+        commands.add(new DisableDataCollectionCommand(mongoConnector));
+
         commands.forEach(command -> jda.addEventListener(command));
         jda.addEventListener(new HelpCommand(commands));
         jda.addEventListener(new DebugEventListener());
     }
 
-    public static void main(String[] args) throws Exception {
-        final String discordToken = System.getenv(DISCORD_APP_TOKEN_SYS_VAR);
+    public static void main(final String[] args) throws Exception {
+        final String discordToken = ApplicationEnvironment.getDiscordToken();
         new DiscordBot(discordToken);
     }
 }

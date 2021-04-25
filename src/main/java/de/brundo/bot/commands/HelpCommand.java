@@ -26,10 +26,12 @@ public class HelpCommand extends AbstractCommand {
                 .append(System.lineSeparator())
                 .append("Ich kann aktuell die folgenden Befehle verstehen:")
                 .append(System.lineSeparator());
-        commands.forEach(command -> {
-            textBuilder.append("**" + AbstractCommand.EXCLAMATION_MARK + command.getCommand() + "** -> " + command.getHelp());
-            textBuilder.append(System.lineSeparator());
-        });
+        commands.stream()
+                .filter(command -> command.isAllowed(event.getMember(), event.getChannel()))
+                .forEach(command -> {
+                    textBuilder.append("**" + AbstractCommand.EXCLAMATION_MARK + command.getCommand() + "** -> " + command.getHelp());
+                    textBuilder.append(System.lineSeparator());
+                });
         final MessageChannel channel = event.getChannel();
         channel.sendMessage(textBuilder.toString()).queue();
     }

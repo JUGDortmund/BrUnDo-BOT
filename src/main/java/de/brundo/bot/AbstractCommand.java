@@ -1,6 +1,7 @@
 package de.brundo.bot;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -29,13 +30,22 @@ public abstract class AbstractCommand extends ListenerAdapter {
     public void onMessageReceived(final MessageReceivedEvent event) {
         final String message = event.getMessage().getContentDisplay();
         if (message.startsWith(EXCLAMATION_MARK + command)) {
-            LOG.info("User {} executes command {}", getUserName(event), command);
-            onCommand(event);
+            if (isAllowed(event.getMember(), event.getChannel())) {
+                LOG.info("User {} executes command {}", getUserName(event), command);
+                onCommand(event);
+            } else {
+                LOG.info("User {} is not allowed to execute command {}", getUserName(event), command);
+                event.getChannel().sendMessage("Aktuell hast du keine Berechtigung diesen Befehl auszuführen.").complete();
+            }
         }
     }
 
     public String getCommand() {
         return command;
+    }
+
+    public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
+        return true;
     }
 
     public static String getUserName(final MessageReceivedEvent event) {
