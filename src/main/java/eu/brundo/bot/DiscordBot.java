@@ -1,11 +1,5 @@
 package eu.brundo.bot;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-
-import javax.security.auth.login.LoginException;
-
 import eu.brundo.bot.commands.AllowDataCollectionCommand;
 import eu.brundo.bot.commands.CanIGoToBedCommand;
 import eu.brundo.bot.commands.CustomDice6Command;
@@ -21,7 +15,17 @@ import eu.brundo.bot.commands.TeamCommand;
 import eu.brundo.bot.commands.TeamsCommand;
 import eu.brundo.bot.commands.TieBreakCommand;
 import eu.brundo.bot.commands.TimerCommand;
+import eu.brundo.bot.data.ChannelSessionService;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import javax.annotation.Nonnull;
+import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,8 @@ public class DiscordBot {
         final JDA jda = builder.build();
 
         final MongoConnector mongoConnector = new MongoConnector();
+
+        final ChannelSessionService channelSessionService = new ChannelSessionService(mongoConnector);
 
         final List<AbstractCommand> commands = new ArrayList<>();
         commands.add(new Dice6Command());
@@ -53,6 +59,25 @@ public class DiscordBot {
         commands.forEach(command -> jda.addEventListener(command));
         jda.addEventListener(new HelpCommand(commands));
         jda.addEventListener(new DebugEventListener());
+
+
+        jda.addEventListener(new ListenerAdapter() {
+
+            @Override
+            public void onGuildVoiceUpdate(@Nonnull final GuildVoiceUpdateEvent event) {
+                final VoiceChannel channelJoined = event.getChannelJoined();
+                final VoiceChannel channelLeft = event.getChannelLeft();
+                final Member member = event.getEntity();
+                if (member != null) {
+                    if (channelLeft != null) {
+                        channelSessionService.onMemberLeavesChannel(channelLeft, member);
+                    }
+                    if (channelJoined != null) {
+                        channelSessionService.onMemberJoinsChannel(channelJoined, member);
+                    }
+                }
+            }
+        });
     }
 
     public static void main(final String[] args) throws Exception {

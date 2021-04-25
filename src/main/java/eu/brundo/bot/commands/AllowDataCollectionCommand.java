@@ -1,23 +1,22 @@
 package eu.brundo.bot.commands;
 
+import eu.brundo.bot.AbstractCommand;
+import eu.brundo.bot.MongoConnector;
+import eu.brundo.bot.repositories.MemberRepository;
+import eu.brundo.bot.store.MemberEntity;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Objects;
 
-import eu.brundo.bot.AbstractCommand;
-import eu.brundo.bot.MongoConnector;
-import eu.brundo.bot.repositories.DiscordMemberRepository;
-import eu.brundo.bot.store.DiscordMember;
-
 public class AllowDataCollectionCommand extends AbstractCommand {
 
-    private final DiscordMemberRepository discordMemberRepository;
+    private final MemberRepository memberRepository;
 
     public AllowDataCollectionCommand(final MongoConnector mongoConnector) {
         super("allowDataCollection");
-        this.discordMemberRepository = new DiscordMemberRepository(mongoConnector);
+        this.memberRepository = new MemberRepository(mongoConnector);
     }
 
     @Override
@@ -25,11 +24,11 @@ public class AllowDataCollectionCommand extends AbstractCommand {
         final Member sender = event.getMember();
         final MessageChannel channel = event.getChannel();
 
-        final DiscordMember member = discordMemberRepository.findMemberByDiscordId(sender.getId())
-                .orElseGet(() -> discordMemberRepository.createNewEntity(sender));
+        final MemberEntity member = memberRepository.findMemberByDiscordId(sender.getId())
+                .orElseGet(() -> memberRepository.createNewEntity(sender));
         if (!member.isCollectingDataAllowed()) {
             member.setCollectingDataAllowed(true);
-            discordMemberRepository.save(member);
+            memberRepository.save(member);
             channel.sendMessage("Ab jetzt kann ich ich ein paar kleine Daten über dich sammeln um zu entscheiden ob du Achievements :trophy: bekommst :)").complete();
         } else {
             channel.sendMessage("Du hattest dem Sammeln von Daten schon zugestimmt.").complete();
