@@ -4,10 +4,11 @@ import de.brundo.bot.AbstractCommand;
 import de.brundo.bot.MongoConnector;
 import de.brundo.bot.repositories.DiscordMemberRepository;
 import de.brundo.bot.store.DiscordMember;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.Objects;
 
 public class AllowDataCollectionCommand extends AbstractCommand {
 
@@ -36,7 +37,7 @@ public class AllowDataCollectionCommand extends AbstractCommand {
 
     @Override
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return overviewRequester.hasPermission(Permission.ADMINISTRATOR);
+        return overviewRequester.getRoles().stream().filter(role -> Objects.equals(role.getName(), "Botti-Admin")).findAny().isPresent();
     }
 
     @Override
