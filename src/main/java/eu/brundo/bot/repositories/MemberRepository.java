@@ -5,6 +5,7 @@ import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.entities.MemberEntity;
 import net.dv8tion.jda.api.entities.Member;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,6 +23,10 @@ public class MemberRepository {
                 .filter(Filters.eq("discordId", discordId))
                 .first();
         return Optional.ofNullable(foundMember);
+    }
+
+    public List<MemberEntity> findAll() {
+        return mongoConnector.getDatastore().find(MemberEntity.class).iterator().toList();
     }
 
     public MemberEntity createNewEntity(final Member sender) {

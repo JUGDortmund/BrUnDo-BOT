@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -58,6 +59,12 @@ public class ChannelSessionService {
                 channelSessionRepository.save(entity);
             }
         }
+    }
+
+    public List<ChannelSessionEntity> getAllSessionsForUser(final Member member) {
+        return memberService.getPersistedMemberEntity(member)
+                .map(memberEntity -> channelSessionRepository.findAllForMember(memberEntity))
+                .orElse(Collections.emptyList());
     }
 
     private class ChannelJoin {

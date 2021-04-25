@@ -1,8 +1,11 @@
 package eu.brundo.bot.repositories;
 
+import dev.morphia.query.experimental.filters.Filters;
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.entities.ChannelSessionEntity;
+import eu.brundo.bot.entities.MemberEntity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ChannelSessionRepository {
@@ -24,5 +27,13 @@ public class ChannelSessionRepository {
         } else {
             mongoConnector.getDatastore().merge(entity);
         }
+    }
+
+    public List<ChannelSessionEntity> findAllForMember(final MemberEntity memberEntity) {
+        return mongoConnector.getDatastore()
+                .find(ChannelSessionEntity.class)
+                .filter(Filters.eq("member", memberEntity))
+                .iterator()
+                .toList();
     }
 }
