@@ -2,8 +2,6 @@ package eu.brundo.bot.data;
 
 import java.util.Random;
 
-import eu.brundo.bot.BrundoEmojis;
-
 public enum KapernDice {
     TOTENKOPF(BrundoEmojis.KAPERN_TOTENKOPF),
     DIAMANT(BrundoEmojis.KAPERN_DIAMANT),

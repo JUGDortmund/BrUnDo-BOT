@@ -5,7 +5,7 @@ import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
 @Entity("members")
-public class MemberEntity {
+public class MemberEntity implements IdBasedEntity {
 
     @Id
     private ObjectId id;
@@ -18,6 +18,7 @@ public class MemberEntity {
 
     private boolean collectingDataAllowed;
 
+    @Override
     public ObjectId getId() {
         return id;
     }
@@ -38,6 +39,7 @@ public class MemberEntity {
         return collectingDataAllowed;
     }
 
+    @Override
     public void setId(final ObjectId id) {
         this.id = id;
     }

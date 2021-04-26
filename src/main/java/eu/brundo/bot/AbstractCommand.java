@@ -7,8 +7,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 public abstract class AbstractCommand extends ListenerAdapter {
 
@@ -29,7 +31,7 @@ public abstract class AbstractCommand extends ListenerAdapter {
     @Override
     public void onMessageReceived(final MessageReceivedEvent event) {
         final String message = event.getMessage().getContentDisplay();
-        if (message.startsWith(EXCLAMATION_MARK + command)) {
+        if (message.toLowerCase().startsWith((EXCLAMATION_MARK + command).toLowerCase())) {
             if (isAllowed(event.getMember(), event.getChannel())) {
                 LOG.info("User {} executes command {}", getUserName(event), command);
                 onCommand(event);
@@ -48,6 +50,17 @@ public abstract class AbstractCommand extends ListenerAdapter {
         return true;
     }
 
+    protected boolean isBottiAdmin(final Member overviewRequester) {
+        return overviewRequester.getRoles().stream().filter(role -> Objects.equals(role.getName(), "Botti-Admin")).findAny().isPresent();
+    }
+
+    private static final Random random = new Random(System.currentTimeMillis());
+
+
+    public static <T> T getRandomEntry(final List<T> list) {
+        return list.get(random.nextInt(list.size());
+    }
+
     public static String getUserName(final MessageReceivedEvent event) {
         Objects.requireNonNull(event);
         return Optional.of(event).map(e -> e.getMessage())
@@ -61,5 +74,9 @@ public abstract class AbstractCommand extends ListenerAdapter {
         final String effectiveName = member.getEffectiveName();
         final String nickName = member.getNickname();
         return Optional.ofNullable(nickName).filter(n -> n.length() > 0).orElse(effectiveName);
+    }
+
+    public void sendMessage(final MessageChannel channel, final String messageKey, final Object... values) {
+        eu.brundo.bot.util.ChannelMessageSender.sendMessage(channel, messageKey, values);
     }
 }

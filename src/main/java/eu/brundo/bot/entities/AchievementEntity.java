@@ -7,8 +7,8 @@ import org.bson.types.ObjectId;
 
 import java.util.Date;
 
-@Entity("voiceChannelSession")
-public class ChannelSessionEntity implements IdBasedEntity, WithMemberRelation {
+@Entity("achievementEntity")
+public class AchievementEntity implements IdBasedEntity, WithMemberRelation {
 
     @Id
     private ObjectId id;
@@ -16,11 +16,9 @@ public class ChannelSessionEntity implements IdBasedEntity, WithMemberRelation {
     @Reference
     private MemberEntity member;
 
-    private String channelId;
+    private String achievementId;
 
-    private Date startTime;
-
-    private Date endTime;
+    private Date achived;
 
     @Override
     public ObjectId getId() {
@@ -42,27 +40,19 @@ public class ChannelSessionEntity implements IdBasedEntity, WithMemberRelation {
         this.member = member;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getAchievementId() {
+        return achievementId;
     }
 
-    public void setChannelId(final String channelId) {
-        this.channelId = channelId;
+    public void setAchievementId(final String achievementId) {
+        this.achievementId = achievementId;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getAchived() {
+        return achived;
     }
 
-    public void setStartTime(final Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(final Date endTime) {
-        this.endTime = endTime;
+    public void setAchived(final Date achived) {
+        this.achived = achived;
     }
 }

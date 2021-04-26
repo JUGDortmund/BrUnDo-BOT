@@ -1,16 +1,17 @@
 package eu.brundo.bot.achievements;
 
 import eu.brundo.bot.MongoConnector;
+import eu.brundo.bot.data.BrundoVoiceChannel;
 import eu.brundo.bot.services.ChannelSessionService;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.Objects;
 
-public class FirstTimeInTreffpunkt extends AbstractAchievement {
+public class FirstTimeInTreffpunktAchievement extends AbstractAchievement {
 
     private final ChannelSessionService channelSessionService;
 
-    public FirstTimeInTreffpunkt(final MongoConnector mongoConnector) {
+    public FirstTimeInTreffpunktAchievement(final MongoConnector mongoConnector) {
         super("FirstTimeInTreffpunkt", "FirstContact");
         this.channelSessionService = new ChannelSessionService(mongoConnector);
     }
@@ -21,7 +22,7 @@ public class FirstTimeInTreffpunkt extends AbstractAchievement {
                 .stream()
                 .map(s -> s.getChannelId())
                 .map(id -> member.getJDA().getVoiceChannelById(id))
-                .filter(c -> Objects.equals("Treffpunkt", c.getName()))
+                .filter(c -> Objects.equals(BrundoVoiceChannel.TREFFPUNKT.getName(), c.getName()))
                 .findAny()
                 .isPresent();
     }

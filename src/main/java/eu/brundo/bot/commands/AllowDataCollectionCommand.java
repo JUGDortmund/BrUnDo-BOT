@@ -4,11 +4,10 @@ import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.MemberRepository;
+import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
-import java.util.Objects;
 
 public class AllowDataCollectionCommand extends AbstractCommand {
 
@@ -29,20 +28,19 @@ public class AllowDataCollectionCommand extends AbstractCommand {
         if (!member.isCollectingDataAllowed()) {
             member.setCollectingDataAllowed(true);
             memberRepository.save(member);
-            channel.sendMessage("Ab jetzt kann ich ich ein paar kleine Daten über dich sammeln um zu entscheiden ob du Achievements :trophy: bekommst :)").complete();
+            sendMessage(channel, "command.allowDataCollection.success");
         } else {
-            channel.sendMessage("Du hattest dem Sammeln von Daten schon zugestimmt.").complete();
+            sendMessage(channel, "command.allowDataCollection.fail");
         }
     }
 
     @Override
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return overviewRequester.getRoles().stream().filter(role -> Objects.equals(role.getName(), "Botti-Admin")).findAny().isPresent();
+        return isBottiAdmin(overviewRequester);
     }
 
     @Override
     public String getHelp() {
-        return "Um Achievements/Erfolge :trophy: im Discord freizuschalten muss Botti ein paar deiner Daten in einer sicheren Umgebung abspeichern. Mit diesem Command Erlabst du, dass Botti generelle Informationen über deinen User und deine Nutzung von Discord speichern darf." +
-                "**Es werden nie persönliche Gespräche oder ähnliche Informationen festgehalten! Ich (Botti) sammel keinerlei Daten von einem Mitglied des Discords bevor es mit nicht explizit erlaubt wurde.**";
+        return BottiResourceBundle.getMessage("command.allowDataCollection.help");
     }
 }

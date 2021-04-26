@@ -1,5 +1,8 @@
 package eu.brundo.bot.commands;
 
+import eu.brundo.bot.AbstractCommand;
+import eu.brundo.bot.data.BrundoVoiceChannel;
+import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -7,9 +10,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import eu.brundo.bot.AbstractCommand;
-import eu.brundo.bot.data.BrundoVoiceChannel;
 
 public class CanIGoToBedCommand extends AbstractCommand {
 
@@ -22,18 +22,19 @@ public class CanIGoToBedCommand extends AbstractCommand {
         final MessageChannel channel = event.getChannel();
         final Random random = new Random(System.currentTimeMillis());
         final List<String> messages = new ArrayList<>();
-        messages.add("NEIN!");
-        messages.add("Noch eine Runde Mars Würfeln!");
+        messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort1"));
+        messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort2"));
         final List<Member> members = event.getJDA().getVoiceChannelById(BrundoVoiceChannel.TREFFPUNKT.getId()).getMembers();
-        if(!members.isEmpty()) {
-            messages.add("Ach komm, " + getUserName(members.get(random.nextInt(members.size()))) + " ist auch noch wach!");
+        if (!members.isEmpty()) {
+            final String name = getUserName(getRandomEntry(members));
+            messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort3", name));
         }
-        messages.add("Aber nur, wenn du auch angesagt hast, dass du grad das letzte Spiel spielst");
+        messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort4"));
         channel.sendMessage(messages.get(random.nextInt(messages.size()))).queue();
     }
 
     @Override
     public String getHelp() {
-        return "Hierdurch wird geklärt, ob jemand ins Bett darf";
+        return BottiResourceBundle.getMessage("command.darfIchInsBett.help");
     }
 }

@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Objects;
-
 public class DisableDataCollectionCommand extends AbstractCommand {
 
     private final MemberRepository memberRepository;
@@ -37,7 +35,7 @@ public class DisableDataCollectionCommand extends AbstractCommand {
 
     @Override
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return overviewRequester.getRoles().stream().filter(role -> Objects.equals(role.getName(), "Botti-Admin")).findAny().isPresent();
+        return isBottiAdmin(overviewRequester);
     }
 
     @Override

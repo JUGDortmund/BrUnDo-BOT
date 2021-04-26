@@ -1,7 +1,7 @@
 package eu.brundo.bot.commands;
 
 import eu.brundo.bot.AbstractCommand;
-import eu.brundo.bot.BrundoEmojis;
+import eu.brundo.bot.data.BrundoEmojis;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class TimerCommand extends AbstractCommand {
         final MessageChannel channel = event.getChannel();
         final String message = event.getMessage().getContentDisplay();
         final String substring = message.substring("!timer".length()).trim();
-        if(substring.isEmpty()) {
+        if (substring.isEmpty()) {
             channel.sendMessage("Du musst eine Einheit (Minuten / Sekunden) angeben. Beispiel '!timer 40s' oder !timer 2m'").queue();
         } else {
             final String unit = substring.substring(substring.length() - 1).trim();
@@ -77,7 +77,7 @@ public class TimerCommand extends AbstractCommand {
             final String skulls = IntStream.range(0, counter).mapToObj(i -> BrundoEmojis.KAPERN_TOTENKOPF).reduce("", (a, b) -> a + b);
             final String diamonds = IntStream.range(0, ICON_COUNT - counter).mapToObj(i -> BrundoEmojis.KAPERN_DIAMANT).reduce("", (a, b) -> a + b);
             channel.editMessageById(messageId, skulls + diamonds).complete();
-            LOG.info("Timer at {} % + counter at {}",percentageDone, counter);
+            LOG.info("Timer at {} % + counter at {}", percentageDone, counter);
             try {
                 final long sleepTime = Math.abs(Math.min(1_000, duration.dividedBy(10).toMillis()));
                 Thread.sleep(sleepTime);

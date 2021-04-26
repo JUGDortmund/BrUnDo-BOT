@@ -1,7 +1,5 @@
 package eu.brundo.bot;
 
-import eu.brundo.bot.achievements.AbstractAchievement;
-import eu.brundo.bot.achievements.FirstTimeInTreffpunkt;
 import eu.brundo.bot.commands.AllowDataCollectionCommand;
 import eu.brundo.bot.commands.CanIGoToBedCommand;
 import eu.brundo.bot.commands.CustomDice6Command;
@@ -13,24 +11,23 @@ import eu.brundo.bot.commands.HelpCommand;
 import eu.brundo.bot.commands.KapernCommand;
 import eu.brundo.bot.commands.QuoteCommand;
 import eu.brundo.bot.commands.ShowAllAchievementsCommand;
+import eu.brundo.bot.commands.ShowMyAchievementsCommand;
 import eu.brundo.bot.commands.SuggestGameCommand;
 import eu.brundo.bot.commands.TeamCommand;
 import eu.brundo.bot.commands.TeamsCommand;
 import eu.brundo.bot.commands.TieBreakCommand;
 import eu.brundo.bot.commands.TimerCommand;
-import eu.brundo.bot.services.ChannelSessionService;
+import eu.brundo.bot.listener.ChannelSessionListener;
+import eu.brundo.bot.listener.DebugEventListener;
+import eu.brundo.bot.services.AchievementService;
 import eu.brundo.bot.services.MemberService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +43,8 @@ public class DiscordBot {
         final JDA jda = builder.build();
 
         final MongoConnector mongoConnector = new MongoConnector();
-
-        final ChannelSessionService channelSessionService = new ChannelSessionService(mongoConnector);
         final MemberService memberService = new MemberService(mongoConnector);
-
-
-        final List<AbstractAchievement> achievements = new ArrayList<>();
-        achievements.add(new FirstTimeInTreffpunkt(mongoConnector));
+        final AchievementService achievementService = new AchievementService(mongoConnector);
 
         final List<AbstractCommand> commands = new ArrayList<>();
         commands.add(new Dice6Command());
@@ -67,43 +59,19 @@ public class DiscordBot {
         commands.add(new TimerCommand());
         commands.add(new TieBreakCommand());
         commands.add(new QuoteCommand());
-        commands.add(new ShowAllAchievementsCommand(achievements));
+        commands.add(new ShowAllAchievementsCommand(mongoConnector));
+        commands.add(new ShowMyAchievementsCommand(mongoConnector));
         commands.add(new AllowDataCollectionCommand(mongoConnector));
         commands.add(new DisableDataCollectionCommand(mongoConnector));
-
         commands.forEach(command -> jda.addEventListener(command));
         jda.addEventListener(new HelpCommand(commands));
         jda.addEventListener(new DebugEventListener());
-
-        jda.addEventListener(new ListenerAdapter() {
-
-            @Override
-            public void onGuildVoiceUpdate(@Nonnull final GuildVoiceUpdateEvent event) {
-                final VoiceChannel channelJoined = event.getChannelJoined();
-                final VoiceChannel channelLeft = event.getChannelLeft();
-                final Member member = event.getEntity();
-                if (member != null) {
-                    if (channelLeft != null) {
-                        channelSessionService.onMemberLeavesChannel(channelLeft, member);
-                    }
-                    if (channelJoined != null) {
-                        channelSessionService.onMemberJoinsChannel(channelJoined, member);
-                    }
-                }
-            }
-        });
-
+        jda.addEventListener(new ChannelSessionListener(mongoConnector));
 
         Executors.newSingleThreadExecutor().submit(() -> {
             while (true) {
                 final List<Member> knownMembers = memberService.getAllMembers(jda);
-
-                achievements.forEach(achievement -> {
-                    knownMembers.forEach(member -> {
-                        final boolean achived = achievement.achived(member);
-                        LOG.info("User '{}' Erfolg '{}' - {}", member.getEffectiveName(), achievement.getName(), achived);
-                    });
-                });
+                achievementService.checkAll(knownMembers);
 
                 try {
                     Thread.sleep(5_000);
@@ -112,8 +80,6 @@ public class DiscordBot {
                 }
             }
         });
-
-
     }
 
     public static void main(final String[] args) throws Exception {

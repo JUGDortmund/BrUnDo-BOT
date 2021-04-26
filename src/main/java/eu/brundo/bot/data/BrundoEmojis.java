@@ -1,4 +1,4 @@
-package eu.brundo.bot;
+package eu.brundo.bot.data;
 
 public interface BrundoEmojis {
 
