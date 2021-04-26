@@ -58,7 +58,7 @@ public abstract class AbstractCommand extends ListenerAdapter {
 
 
     public static <T> T getRandomEntry(final List<T> list) {
-        return list.get(random.nextInt(list.size());
+        return list.get(random.nextInt(list.size()));
     }
 
     public static String getUserName(final MessageReceivedEvent event) {
