@@ -74,7 +74,7 @@ public class DiscordBot {
                 achievementService.checkAll(knownMembers);
 
                 try {
-                    Thread.sleep(5_000);
+                    Thread.sleep(30_000);
                 } catch (final Exception e) {
                     throw new RuntimeException(e);
                 }

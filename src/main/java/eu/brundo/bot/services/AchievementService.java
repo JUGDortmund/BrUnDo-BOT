@@ -8,6 +8,7 @@ import eu.brundo.bot.entities.AchievementEntity;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.AchievementRepository;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,16 +41,17 @@ public class AchievementService {
     }
 
     public void checkAll(final List<Member> knownMembers) {
-        achievements.forEach(achievement -> {
-            knownMembers.forEach(member -> {
-                final boolean achived = achievement.achived(member);
-                LOG.info("User '{}' Erfolg '{}' -> {}", member.getEffectiveName(), achievement.getName(), achived);
-                if (achived) {
-                    addAchievement(achievement, member);
-                }
-            });
+        knownMembers.forEach(member -> {
+            if (memberService.isCollectingDataAllowed(member)) {
+                final MemberEntity memberEntity = memberService.getOrCreateMemberEntity(member);
+                achievements.forEach(achievement -> {
+                    LOG.info("Checking Achievement: User '{}' Erfolg '{}'", member.getEffectiveName(), achievement.getName());
+                    if (!achievementRepository.hasAchived(memberEntity, achievement.getId()) && achievement.achived(member)) {
+                        addAchievement(achievement, member);
+                    }
+                });
+            }
         });
-
     }
 
     public List<AbstractAchievement> getAchievements() {
@@ -75,6 +77,10 @@ public class AchievementService {
             achievementEntity.setAchived(Date.from(ZonedDateTime.now(ZoneId.of("Europe/Berlin")).toInstant()));
             achievementRepository.save(achievementEntity);
             LOG.info("User '{}' hat Erfolg '{}' freigeschaltet!", member.getEffectiveName(), achievement.getName());
+
+            final PrivateChannel privateChannel = member.getUser().openPrivateChannel().complete();
+            privateChannel.sendMessage("Herzlichen Glückwunsch, du hast ein Erfolg freigeschaltet :trophy: :trophy: :trophy:").complete();
+            privateChannel.sendMessage("**" + achievement.getName() + "** -> " + achievement.getDescription()).complete();
         }
     }
 

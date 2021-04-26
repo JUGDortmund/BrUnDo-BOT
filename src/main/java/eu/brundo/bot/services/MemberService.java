@@ -44,7 +44,7 @@ public class MemberService {
     public List<Member> getAllMembers(final JDA jda) {
         final Function<MemberEntity, Member> converter = memberEntity -> {
             return jda.getGuilds().stream()
-                    .map(g -> g.getMemberById(memberEntity.getDiscordId()))
+                    .map(g -> g.retrieveMemberById(memberEntity.getDiscordId()).complete())
                     .filter(m -> m != null)
                     .findAny()
                     .orElse(null);

@@ -20,13 +20,13 @@ public class AchievementRepository {
         return new AchievementEntity();
     }
 
-    public boolean hasAchived(final MemberEntity memberEntity, final String id) {
+    public boolean hasAchived(final MemberEntity memberEntity, final String achievementId) {
         Objects.requireNonNull(memberEntity);
-        Objects.requireNonNull(id);
+        Objects.requireNonNull(achievementId);
         return mongoConnector.getDatastore()
                 .find(AchievementEntity.class)
                 .filter(Filters.eq("member", memberEntity))
-                .filter(Filters.eq("achievementId", id))
+                .filter(Filters.eq("achievementId", achievementId))
                 .count() != 0;
     }
 
