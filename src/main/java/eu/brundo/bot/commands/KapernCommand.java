@@ -1,12 +1,10 @@
 package eu.brundo.bot.commands;
 
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
-import java.util.stream.IntStream;
-
 import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.data.KapernDice;
+import eu.brundo.bot.util.BottiResourceBundle;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class KapernCommand extends AbstractCommand {
 
@@ -18,13 +16,11 @@ public class KapernCommand extends AbstractCommand {
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
         final StringBuilder textBuilder = new StringBuilder();
-        textBuilder.append("Auf geht die Kaperfahrt:");
-        IntStream.range(0, 5).forEach(i -> textBuilder.append(" " + KapernDice.random().getDefinition()));
-        channel.sendMessage(textBuilder.toString()).queue();
+        sendMessage(channel, "command.kapern.antwort", KapernDice.random().getDefinition(), KapernDice.random().getDefinition(), KapernDice.random().getDefinition(), KapernDice.random().getDefinition(), KapernDice.random().getDefinition());
     }
 
     @Override
     public String getHelp() {
-        return "Einen Kaperfahrt würfeln";
+        return BottiResourceBundle.getMessage("command.kapern.help");
     }
 }

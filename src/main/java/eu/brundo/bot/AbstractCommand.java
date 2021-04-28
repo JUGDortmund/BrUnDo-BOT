@@ -20,6 +20,8 @@ public abstract class AbstractCommand extends ListenerAdapter {
 
     private final String command;
 
+    private static final Random random = new Random(System.currentTimeMillis());
+    
     public AbstractCommand(final String command) {
         this.command = Objects.requireNonNull(command);
     }
@@ -53,9 +55,6 @@ public abstract class AbstractCommand extends ListenerAdapter {
     protected boolean isBottiAdmin(final Member overviewRequester) {
         return overviewRequester.getRoles().stream().filter(role -> Objects.equals(role.getName(), "Botti-Admin")).findAny().isPresent();
     }
-
-    private static final Random random = new Random(System.currentTimeMillis());
-
 
     public static <T> T getRandomEntry(final List<T> list) {
         return list.get(random.nextInt(list.size()));

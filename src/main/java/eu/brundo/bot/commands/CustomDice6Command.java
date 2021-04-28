@@ -1,11 +1,11 @@
 package eu.brundo.bot.commands;
 
+import eu.brundo.bot.AbstractCommand;
+import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Random;
-
-import eu.brundo.bot.AbstractCommand;
 
 public class CustomDice6Command extends AbstractCommand {
 
@@ -19,11 +19,11 @@ public class CustomDice6Command extends AbstractCommand {
         final Random random = new Random(System.currentTimeMillis());
         final String user = getUserName(event);
         final int value = random.nextInt(6) + 1;
-        channel.sendMessage(user + " würfelt eine " + value).queue();
+        sendMessage(channel, "command.wme6.antwort", user, value);
     }
 
     @Override
     public String getHelp() {
-        return "Einen W6 würfeln";
+        return BottiResourceBundle.getMessage("command.wme6.help");
     }
 }

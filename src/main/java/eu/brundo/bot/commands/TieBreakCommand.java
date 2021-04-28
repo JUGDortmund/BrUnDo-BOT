@@ -1,5 +1,8 @@
 package eu.brundo.bot.commands;
 
+import eu.brundo.bot.AbstractCommand;
+import eu.brundo.bot.data.Game;
+import eu.brundo.bot.data.TeamManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -8,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
-import eu.brundo.bot.AbstractCommand;
-import eu.brundo.bot.data.Game;
-import eu.brundo.bot.data.TeamManager;
 
 public class TieBreakCommand extends AbstractCommand {
 
@@ -19,27 +19,27 @@ public class TieBreakCommand extends AbstractCommand {
     public TieBreakCommand() {
         super("tiebreak");
     }
-
+    
     @Override
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
         final List<Member> mentionedMembers = event.getMessage().getMentionedMembers();
-        if(mentionedMembers.isEmpty()) {
+        if (mentionedMembers.isEmpty()) {
             channel.sendMessage("Du musst schon User angegeben zwischen denen ich entscheiden soll. Etwa so: '!tiebreak @User1 @User2'").queue();
-        } else if(mentionedMembers.size() == 1) {
+        } else if (mentionedMembers.size() == 1) {
             channel.sendMessage("Es tut mir leid aber meine Schaltkreise bestehen nur aus Catan Schafen und können nicht mit gespaltenen Persönlichkeiten umgehen. Bitte gib wenigstens 2 User an zwischen denen ich vermitteln soll.  Etwa so: '!tiebreak @User1 @User2'").queue();
         } else {
             final Random random = new Random(System.currentTimeMillis());
             final List<String> working = new ArrayList<>();
             working.add("Ich befrage die klügsten aller " + TeamManager.getInstance().getRandomRace() + " um Rat...");
-            working.add("Ich sinniere auf einem Turm aus " + (random.nextInt(21) + 1)+ " Würfeln um eine faire Lösung zu finden...");
+            working.add("Ich sinniere auf einem Turm aus " + (random.nextInt(21) + 1) + " Würfeln um eine faire Lösung zu finden...");
             working.add("Ich versuche eine Entscheidung durch einen W" + random.nextInt(100) + " zu erzwingen...");
             working.add("Ich überlege ob Schnick-Schnack-Schnuck eine gute Lösung wäre...");
             working.add("Ich erklimme den Spiele-Olymp um die " + TeamManager.getInstance().getRandomAdjective() + " Spielegötter um Rat zu fragen.");
             working.add("Ich erbitte um Ratschläge bei den Ältesten der " + TeamManager.getInstance().getRandomRace() + "...");
-            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add("Hättet ihr nicht einfach eine Partie " +  game.getName() + " spielen können anstatt mich zu fragen?"));
-            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add("Damals hat man sowas noch mit einer Partie" +  game.getName() + " geklärt anstatt nen Bot damit zu belästigen..."));
-            if(mentionedMembers.size() == 2) {
+            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add("Hättet ihr nicht einfach eine Partie " + game.getName() + " spielen können anstatt mich zu fragen?"));
+            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add("Damals hat man sowas noch mit einer Partie" + game.getName() + " geklärt anstatt nen Bot damit zu belästigen..."));
+            if (mentionedMembers.size() == 2) {
                 working.add("War ja wieder klar, dass " + getUserName(mentionedMembers.get(0)) + " und " + getUserName(mentionedMembers.get(1)) + " sich nicht einigen können...");
                 working.add("Hätten Bots mehr Rechte, dann würde ich ja einfach sagen \"Wenn 2 sich streiten, dann freut sich der dritte!\" Aber in diesem Fall bedeutet es nur Arbeit für mich...");
                 working.add("Also " + getUserName(mentionedMembers.get(0)) + " gibt " + getUserName(mentionedMembers.get(1)) + " die Schlossallee zurück und dafür zerreißt " + getUserName(mentionedMembers.get(1)) + " keine 1000 DM Scheine mehr! Oh, falsches Spiel. Dann brauch ich einen kleinen Moment...");
