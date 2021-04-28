@@ -1,9 +1,12 @@
-package eu.brundo.bot;
+package eu.brundo.bot.commands;
 
+import eu.brundo.bot.util.ChannelMessageSender;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
-public abstract class AbstractCommand extends ListenerAdapter {
+public abstract class AbstractCommand extends ListenerAdapter implements Comparable<AbstractCommand> {
 
     private final static Logger LOG = LoggerFactory.getLogger(AbstractCommand.class);
 
@@ -21,7 +24,7 @@ public abstract class AbstractCommand extends ListenerAdapter {
     private final String command;
 
     private static final Random random = new Random(System.currentTimeMillis());
-    
+
     public AbstractCommand(final String command) {
         this.command = Objects.requireNonNull(command);
     }
@@ -30,12 +33,15 @@ public abstract class AbstractCommand extends ListenerAdapter {
 
     public abstract String getHelp();
 
+    public abstract CommandCategories getCategory();
+
     @Override
     public void onMessageReceived(final MessageReceivedEvent event) {
         final String message = event.getMessage().getContentDisplay();
         if (message.toLowerCase().startsWith((EXCLAMATION_MARK + command).toLowerCase())) {
             if (isAllowed(event.getMember(), event.getChannel())) {
                 LOG.info("User {} executes command {}", getUserName(event), command);
+                event.getChannel().sendTyping().complete();
                 onCommand(event);
             } else {
                 LOG.info("User {} is not allowed to execute command {}", getUserName(event), command);
@@ -54,6 +60,10 @@ public abstract class AbstractCommand extends ListenerAdapter {
 
     protected boolean isBottiAdmin(final Member overviewRequester) {
         return overviewRequester.getRoles().stream().filter(role -> Objects.equals(role.getName(), "Botti-Admin")).findAny().isPresent();
+    }
+
+    protected boolean isAdmin(final Member overviewRequester) {
+        return overviewRequester.getPermissions().contains(Permission.ADMINISTRATOR);
     }
 
     public static <T> T getRandomEntry(final List<T> list) {
@@ -76,6 +86,18 @@ public abstract class AbstractCommand extends ListenerAdapter {
     }
 
     public void sendMessage(final MessageChannel channel, final String messageKey, final Object... values) {
-        eu.brundo.bot.util.ChannelMessageSender.sendMessage(channel, messageKey, values);
+        ChannelMessageSender.sendMessage(channel, messageKey, values);
+    }
+
+    public void sendTranslatedMessage(final MessageChannel channel, final String message) {
+        ChannelMessageSender.sendTranslatedMessage(channel, message);
+    }
+
+    @Override
+    public int compareTo(@NotNull final AbstractCommand o) {
+        if (o == null) {
+            return 1;
+        }
+        return getCategory().compareTo(o.getCategory());
     }
 }

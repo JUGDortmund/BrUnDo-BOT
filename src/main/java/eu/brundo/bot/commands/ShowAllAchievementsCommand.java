@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.services.AchievementService;
 import net.dv8tion.jda.api.entities.Member;
@@ -25,11 +24,16 @@ public class ShowAllAchievementsCommand extends AbstractCommand {
 
     @Override
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return isBottiAdmin(overviewRequester);
+        return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
     }
 
     @Override
     public String getHelp() {
         return "Zeigt alle Achievements die es gibt";
+    }
+
+    @Override
+    public CommandCategories getCategory() {
+        return CommandCategories.ACHIEVEMTENT_CATEGORY;
     }
 }

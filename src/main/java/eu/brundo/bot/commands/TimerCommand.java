@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.data.BrundoEmojis;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -74,8 +73,8 @@ public class TimerCommand extends AbstractCommand {
             final Duration untilNow = Duration.between(startTime, LocalTime.now());
             final double percentageDone = (untilNow.toMillis() * 100.0d) / duration.toMillis();
             final int counter = (int) (percentageDone / (100 / ICON_COUNT));
-            final String skulls = IntStream.range(0, counter).mapToObj(i -> BrundoEmojis.KAPERN_TOTENKOPF).reduce("", (a, b) -> a + b);
-            final String diamonds = IntStream.range(0, ICON_COUNT - counter).mapToObj(i -> BrundoEmojis.KAPERN_DIAMANT).reduce("", (a, b) -> a + b);
+            final String skulls = IntStream.range(0, counter).mapToObj(i -> BrundoEmojis.KAPERN_TOTENKOPF_EMOJI).reduce("", (a, b) -> a + b);
+            final String diamonds = IntStream.range(0, ICON_COUNT - counter).mapToObj(i -> BrundoEmojis.KAPERN_DIAMANT_EMOJI).reduce("", (a, b) -> a + b);
             channel.editMessageById(messageId, skulls + diamonds).complete();
             LOG.info("Timer at {} % + counter at {}", percentageDone, counter);
             try {
@@ -85,7 +84,7 @@ public class TimerCommand extends AbstractCommand {
                 throw new RuntimeException(e);
             }
         }
-        final String skulls = IntStream.range(0, ICON_COUNT).mapToObj(i -> BrundoEmojis.KAPERN_TOTENKOPF).reduce("", (a, b) -> a + b);
+        final String skulls = IntStream.range(0, ICON_COUNT).mapToObj(i -> BrundoEmojis.KAPERN_TOTENKOPF_EMOJI).reduce("", (a, b) -> a + b);
         channel.sendMessage("ALARM! ALARM!").complete();
         channel.editMessageById(messageId, skulls).complete();
     }
@@ -93,5 +92,10 @@ public class TimerCommand extends AbstractCommand {
     @Override
     public String getHelp() {
         return "Einen Timer starten";
+    }
+
+    @Override
+    public CommandCategories getCategory() {
+        return CommandCategories.GAME_CATEGORY;
     }
 }

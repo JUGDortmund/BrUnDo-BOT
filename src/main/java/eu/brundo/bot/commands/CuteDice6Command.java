@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -24,5 +23,10 @@ public class CuteDice6Command extends AbstractCommand {
     @Override
     public String getHelp() {
         return BottiResourceBundle.getMessage("command.ww6.help");
+    }
+
+    @Override
+    public CommandCategories getCategory() {
+        return CommandCategories.GAME_CATEGORY;
     }
 }

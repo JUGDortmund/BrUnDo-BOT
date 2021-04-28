@@ -1,14 +1,18 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.AbstractCommand;
+import eu.brundo.bot.MongoConnector;
+import eu.brundo.bot.achievements.TieLostAchievment;
+import eu.brundo.bot.achievements.TieWonAchievment;
 import eu.brundo.bot.data.Game;
 import eu.brundo.bot.data.TeamManager;
+import eu.brundo.bot.services.AchievementService;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
@@ -16,10 +20,13 @@ public class TieBreakCommand extends AbstractCommand {
 
     private final static int MAX_SLEEP_TIME = 8_000;
 
-    public TieBreakCommand() {
+    private final AchievementService achievementService;
+
+    public TieBreakCommand(final MongoConnector mongoConnector) {
         super("tiebreak");
+        this.achievementService = new AchievementService(mongoConnector);
     }
-    
+
     @Override
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
@@ -89,6 +96,21 @@ public class TieBreakCommand extends AbstractCommand {
                     finalWinner.add("Nicht das **" + getUserName(winner) + "** sich gleich wieder selbst voll abfeiert, aber leider muss ich mitteilen, dass ich als unparteiischer Bot diesen User zum Gewinner erkläre.");
                     finalWinner.add("Mein Kniffel-Co-Prozessor hat erwürfelt, dass **" + getUserName(winner) + "** eigentlich garnicht besser war aber ausnahmsweise in diesem Fall gewonnen hat.");
                     channel.sendMessage(finalWinner.get(random.nextInt(finalWinner.size()))).complete();
+
+                    if (!achievementService.hasAchived(winner, new TieWonAchievment())) {
+                        achievementService.addAchievement(new TieWonAchievment(), winner);
+                    }
+                    if (mentionedMembers.size() == 2) {
+                        mentionedMembers.stream()
+                                .filter(member -> !Objects.equals(winner, member))
+                                .findAny()
+                                .ifPresent(looser -> {
+                                    if (!achievementService.hasAchived(looser, new TieLostAchievment())) {
+                                        achievementService.addAchievement(new TieLostAchievment(), looser);
+                                    }
+                                });
+                    }
+
                 } catch (final Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -100,5 +122,10 @@ public class TieBreakCommand extends AbstractCommand {
     @Override
     public String getHelp() {
         return "Ich kann dir helfen einen Gleichstand aufzulösen";
+    }
+
+    @Override
+    public CommandCategories getCategory() {
+        return CommandCategories.GAME_CATEGORY;
     }
 }
