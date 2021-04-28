@@ -3,10 +3,10 @@ package eu.brundo.bot.data;
 import java.util.Random;
 
 public enum KapernDice {
-    TOTENKOPF(BrundoEmojis.KAPERN_TOTENKOPF),
-    DIAMANT(BrundoEmojis.KAPERN_DIAMANT),
+    TOTENKOPF(BrundoEmojis.KAPERN_TOTENKOPF_EMOJI),
+    DIAMANT(BrundoEmojis.KAPERN_DIAMANT_EMOJI),
     SAEBEL("SAEBEL"),
-    AFFE(BrundoEmojis.KAPERN_AFFE),
+    AFFE(BrundoEmojis.KAPERN_AFFE_EMOJI),
     PAPAGEI("PAPAGEI"),
     GOLD("GOLD");
 

@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.data.TeamManager;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -20,5 +19,10 @@ public class TeamCommand extends AbstractCommand {
     @Override
     public String getHelp() {
         return "Gibt den Namen eines zufälligen Teams aus";
+    }
+
+    @Override
+    public CommandCategories getCategory() {
+        return CommandCategories.GAME_CATEGORY;
     }
 }

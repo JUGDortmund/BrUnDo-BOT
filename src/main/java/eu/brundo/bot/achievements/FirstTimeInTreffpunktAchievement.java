@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Member;
 
 import java.util.Objects;
 
-public class FirstTimeInTreffpunktAchievement extends AbstractAchievement {
+public class FirstTimeInTreffpunktAchievement extends AbstractCheckableAchievement {
 
     private final ChannelSessionService channelSessionService;
 

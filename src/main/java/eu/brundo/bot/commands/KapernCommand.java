@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.AbstractCommand;
 import eu.brundo.bot.data.KapernDice;
 import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -22,5 +21,10 @@ public class KapernCommand extends AbstractCommand {
     @Override
     public String getHelp() {
         return BottiResourceBundle.getMessage("command.kapern.help");
+    }
+
+    @Override
+    public CommandCategories getCategory() {
+        return CommandCategories.GAME_CATEGORY;
     }
 }

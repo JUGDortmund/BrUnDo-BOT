@@ -1,9 +1,18 @@
 package eu.brundo.bot.services;
 
 import eu.brundo.bot.MongoConnector;
-import eu.brundo.bot.achievements.AbstractAchievement;
+import eu.brundo.bot.achievements.AbstractAchievment;
+import eu.brundo.bot.achievements.AbstractCheckableAchievement;
+import eu.brundo.bot.achievements.AloneInTreffpunktAchievement;
 import eu.brundo.bot.achievements.FirstTimeInTreffpunktAchievement;
+import eu.brundo.bot.achievements.IntroducedAchievement;
+import eu.brundo.bot.achievements.MonopolyAchievment;
+import eu.brundo.bot.achievements.PackPlayerAchievement;
 import eu.brundo.bot.achievements.PlayedAtAllTablesAchievement;
+import eu.brundo.bot.achievements.SitzfleischAchievement;
+import eu.brundo.bot.achievements.SpalterAchievment;
+import eu.brundo.bot.achievements.TieLostAchievment;
+import eu.brundo.bot.achievements.TieWonAchievment;
 import eu.brundo.bot.entities.AchievementEntity;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.AchievementRepository;
@@ -30,35 +39,46 @@ public class AchievementService {
 
     private final AchievementRepository achievementRepository;
 
-    private final List<AbstractAchievement> achievements;
+    private final List<AbstractAchievment> achievements;
 
     public AchievementService(final MongoConnector mongoConnector) {
         this.memberService = new MemberService(mongoConnector);
         this.achievementRepository = new AchievementRepository(mongoConnector);
         achievements = new ArrayList<>();
+        achievements.add(new AloneInTreffpunktAchievement(mongoConnector));
         achievements.add(new FirstTimeInTreffpunktAchievement(mongoConnector));
+        achievements.add(new IntroducedAchievement(mongoConnector));
+        achievements.add(new MonopolyAchievment());
+        achievements.add(new PackPlayerAchievement(mongoConnector));
         achievements.add(new PlayedAtAllTablesAchievement(mongoConnector));
+        achievements.add(new SitzfleischAchievement(mongoConnector));
+        achievements.add(new TieLostAchievment());
+        achievements.add(new TieWonAchievment());
+        achievements.add(new SpalterAchievment());
     }
 
     public void checkAll(final List<Member> knownMembers) {
         knownMembers.forEach(member -> {
             if (memberService.isCollectingDataAllowed(member)) {
                 final MemberEntity memberEntity = memberService.getOrCreateMemberEntity(member);
-                achievements.forEach(achievement -> {
-                    LOG.info("Checking Achievement: User '{}' Erfolg '{}'", member.getEffectiveName(), achievement.getName());
-                    if (!achievementRepository.hasAchived(memberEntity, achievement.getId()) && achievement.achived(member)) {
-                        addAchievement(achievement, member);
-                    }
-                });
+                achievements.stream()
+                        .filter(achievement -> achievement instanceof AbstractCheckableAchievement)
+                        .map(achievement -> (AbstractCheckableAchievement) achievement)
+                        .forEach(achievement -> {
+                            LOG.info("Checking Achievement: User '{}' Erfolg '{}'", member.getEffectiveName(), achievement.getName());
+                            if (!achievementRepository.hasAchived(memberEntity, achievement.getId()) && achievement.achived(member)) {
+                                addAchievement(achievement, member);
+                            }
+                        });
             }
         });
     }
 
-    public List<AbstractAchievement> getAchievements() {
+    public List<AbstractAchievment> getAchievements() {
         return Collections.unmodifiableList(achievements);
     }
 
-    public boolean hasAchived(final Member member, final AbstractAchievement achievement) {
+    public boolean hasAchived(final Member member, final AbstractAchievment achievement) {
         Objects.requireNonNull(member);
         Objects.requireNonNull(achievement);
         return memberService.getPersistedMemberEntity(member)
@@ -66,7 +86,7 @@ public class AchievementService {
                 .orElse(false);
     }
 
-    public void addAchievement(final AbstractAchievement achievement, final Member member) {
+    public void addAchievement(final AbstractAchievment achievement, final Member member) {
         Objects.requireNonNull(member);
         Objects.requireNonNull(achievement);
         if (memberService.isCollectingDataAllowed(member)) {
@@ -84,7 +104,7 @@ public class AchievementService {
         }
     }
 
-    public List<AbstractAchievement> getAllForMember(final Member member) {
+    public List<AbstractAchievment> getAllForMember(final Member member) {
         Objects.requireNonNull(member);
         if (memberService.isCollectingDataAllowed(member)) {
             final MemberEntity memberEntity = memberService.getOrCreateMemberEntity(member);
@@ -97,7 +117,7 @@ public class AchievementService {
         }
     }
 
-    private Optional<AbstractAchievement> getAchievementById(final String id) {
+    private Optional<AbstractAchievment> getAchievementById(final String id) {
         return achievements.stream()
                 .filter(achievement -> Objects.equals(achievement.getId(), id))
                 .findAny();

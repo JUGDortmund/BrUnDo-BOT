@@ -1,6 +1,6 @@
 package eu.brundo.bot.listener;
 
-import eu.brundo.bot.AbstractCommand;
+import eu.brundo.bot.commands.AbstractCommand;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
