@@ -55,7 +55,7 @@ public class TeamsCommand extends AbstractCommand {
                     final StringBuilder messageBuilder = new StringBuilder();
                     partitions.forEach(list -> {
                         final String teamMembers = list.stream().map(member -> "<@" + member.getId() + ">").reduce("", (a, b) -> a + ", " + b);
-                        messageBuilder.append("**" + TeamManager.getInstance().getRandomTeamName() + "**: " + teamMembers.substring(1));
+                        messageBuilder.append("**" + TeamManager.getInstance().getRandomTeamName() + "**: " + teamMembers.substring(1)).append(System.lineSeparator());
                     });
                     sendTranslatedMessage(channel, messageBuilder.toString());
                     if (!achievementService.hasAchived(event.getMember(), new SpalterAchievment())) {
