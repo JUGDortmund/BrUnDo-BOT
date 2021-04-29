@@ -61,7 +61,7 @@ public class DiscordBot {
         commands.add(new CuteDice6Command());
         commands.add(new CustomDice6Command());
         commands.add(new KapernCommand());
-        commands.add(new SuggestGameCommand());
+        commands.add(new SuggestGameCommand(mongoConnector));
         commands.add(new TeamCommand());
         commands.add(new TeamsCommand(mongoConnector));
         commands.add(new CanIGoToBedCommand());

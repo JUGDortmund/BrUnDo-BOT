@@ -2,7 +2,6 @@ package eu.brundo.bot.commands;
 
 import eu.brundo.bot.util.BottiResourceBundle;
 import eu.brundo.bot.util.BrundoUtils;
-import eu.brundo.bot.util.ChannelMessageSender;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -61,6 +60,10 @@ public abstract class AbstractCommand extends ListenerAdapter implements Compara
         return command;
     }
 
+    public boolean listInHelp() {
+        return true;
+    }
+
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
         return true;
     }
@@ -82,11 +85,11 @@ public abstract class AbstractCommand extends ListenerAdapter implements Compara
     }
 
     public Message sendMessage(final MessageChannel channel, final String messageKey, final Object... values) {
-        return ChannelMessageSender.sendMessage(channel, messageKey, values);
+        return BrundoUtils.sendMessage(channel, messageKey, values);
     }
 
     public Message sendTranslatedMessage(final MessageChannel channel, final String message) {
-        return ChannelMessageSender.sendTranslatedMessage(channel, message);
+        return BrundoUtils.sendTranslatedMessage(channel, message);
     }
 
     public void sendTyping(final MessageChannel channel) {
