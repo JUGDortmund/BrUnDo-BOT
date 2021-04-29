@@ -14,7 +14,7 @@ public class PackPlayerAchievement extends AbstractCheckableAchievement {
     private final ChannelSessionService channelSessionService;
 
     public PackPlayerAchievement(final MongoConnector mongoConnector) {
-        super("PackPlayer", "RudelSpieler");
+        super("PackPlayer", 10);
         this.channelSessionService = new ChannelSessionService(mongoConnector);
     }
 
@@ -25,10 +25,5 @@ public class PackPlayerAchievement extends AbstractCheckableAchievement {
                 .map(voiceChannel -> voiceChannel.getMembers())
                 .orElse(Collections.emptyList());
         return members.size() > 10 && members.contains(member);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Am besten ist es mit richtig vielen";
     }
 }

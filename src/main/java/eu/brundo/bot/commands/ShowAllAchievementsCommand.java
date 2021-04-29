@@ -18,18 +18,15 @@ public class ShowAllAchievementsCommand extends AbstractCommand {
     @Override
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
-        channel.sendMessage("Hier sind alle Erfolge :trophy: die du bekommen kannst:").complete();
-        achievementService.getAchievements().forEach(a -> channel.sendMessage("**" + a.getName() + "**: " + a.getDescription()).complete());
+        final StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append(translate("command.achievements.answer")).append(System.lineSeparator());
+        achievementService.getAchievements().forEach(a -> messageBuilder.append("**" + a.getName() + "**: " + a.getDescription()).append(System.lineSeparator()));
+        sendTranslatedMessage(channel, messageBuilder.toString());
     }
 
     @Override
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
         return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
-    }
-
-    @Override
-    public String getHelp() {
-        return "Zeigt alle Achievements die es gibt";
     }
 
     @Override

@@ -12,7 +12,7 @@ public class FirstTimeInTreffpunktAchievement extends AbstractCheckableAchieveme
     private final ChannelSessionService channelSessionService;
 
     public FirstTimeInTreffpunktAchievement(final MongoConnector mongoConnector) {
-        super("FirstTimeInTreffpunkt", "FirstContact");
+        super("FirstTimeInTreffpunkt", 10);
         this.channelSessionService = new ChannelSessionService(mongoConnector);
     }
 
@@ -25,10 +25,5 @@ public class FirstTimeInTreffpunktAchievement extends AbstractCheckableAchieveme
                 .filter(c -> Objects.equals(BrundoVoiceChannel.TREFFPUNKT.getName(), c.getName()))
                 .findAny()
                 .isPresent();
-    }
-
-    @Override
-    public String getDescription() {
-        return "Du bist das erste mal im 'Treffpunkt' gewesen.";
     }
 }

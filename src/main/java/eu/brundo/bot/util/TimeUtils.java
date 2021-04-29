@@ -1,19 +1,25 @@
 package eu.brundo.bot.util;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class TimeUtils {
 
-    public static LocalDate convertToLocalDate(final Date dateToConvert) {
-        return LocalDate.ofInstant(
-                dateToConvert.toInstant(), ZoneId.systemDefault());
+    public static ZonedDateTime convertToLocalDateTime(final Date dateToConvert) {
+        return ZonedDateTime.ofInstant(
+                dateToConvert.toInstant(), getZoneIdForGermany());
     }
 
-    public static LocalDateTime convertToLocalDateTime(final Date dateToConvert) {
-        return LocalDateTime.ofInstant(
-                dateToConvert.toInstant(), ZoneId.systemDefault());
+    public static Date convertToDate(final ZonedDateTime zonedDateTime) {
+        return Date.from(zonedDateTime.toInstant());
+    }
+
+    public static ZoneId getZoneIdForGermany() {
+        return ZoneId.of("Europe/Berlin");
+    }
+
+    public static ZonedDateTime nowInGermany() {
+        return ZonedDateTime.now(getZoneIdForGermany());
     }
 }

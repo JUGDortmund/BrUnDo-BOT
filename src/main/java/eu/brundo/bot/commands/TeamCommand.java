@@ -13,12 +13,7 @@ public class TeamCommand extends AbstractCommand {
     @Override
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
-        channel.sendMessage("Hier ein cooler Name für dein Team: **" + TeamManager.getInstance().getRandomTeamName() + "**").queue();
-    }
-
-    @Override
-    public String getHelp() {
-        return "Gibt den Namen eines zufälligen Teams aus";
+        sendMessage(channel, "command.tiername.answer", TeamManager.getInstance().getRandomTeamName());
     }
 
     @Override

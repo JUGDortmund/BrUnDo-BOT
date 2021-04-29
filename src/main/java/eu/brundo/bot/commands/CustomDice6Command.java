@@ -1,6 +1,6 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.util.BottiResourceBundle;
+import eu.brundo.bot.util.BrundoUtils;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -16,14 +16,9 @@ public class CustomDice6Command extends AbstractCommand {
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
         final Random random = new Random(System.currentTimeMillis());
-        final String user = getUserName(event);
+        final String user = BrundoUtils.getUserName(event);
         final int value = random.nextInt(6) + 1;
         sendMessage(channel, "command.wme6.antwort", user, value);
-    }
-
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.wme6.help");
     }
 
     @Override

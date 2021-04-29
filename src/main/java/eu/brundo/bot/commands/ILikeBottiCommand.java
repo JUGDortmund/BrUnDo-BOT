@@ -21,12 +21,12 @@ public class ILikeBottiCommand extends AbstractCommand {
         messages.add(BottiResourceBundle.getMessage("command.ichMagBotti.antwort1"));
         messages.add(BottiResourceBundle.getMessage("command.ichMagBotti.antwort2"));
         messages.add(BottiResourceBundle.getMessage("command.ichMagBotti.antwort3"));
-        sendTranslatedMessage(channel, getRandomEntry(messages));
-    }
+        messages.add(BottiResourceBundle.getMessage("command.ichMagBotti.antwort4"));
+        messages.add(BottiResourceBundle.getMessage("command.ichMagBotti.antwort5"));
+        messages.add(BottiResourceBundle.getMessage("command.ichMagBotti.antwort6"));
 
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.ichMagBotti.help");
+
+        sendTranslatedMessage(channel, getRandomEntry(messages));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package eu.brundo.bot.commands;
 
+import eu.brundo.bot.data.Game;
 import eu.brundo.bot.util.BottiResourceBundle;
 import eu.brundo.bot.util.BrundoUtils;
 import net.dv8tion.jda.api.entities.Member;
@@ -31,12 +32,13 @@ public class CanIGoToBedCommand extends AbstractCommand {
         messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort12"));
         messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort13"));
         messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort14"));
+        messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort17", Game.MONSTER_FACTORY.getName(), Game.MONSTER_FACTORY.getLink()));
 
         final List<Member> otherMembers = BrundoUtils.getAllMembersInVoiceChannels(event.getJDA()).stream()
                 .filter(member -> !Objects.equals(member, event.getMember()))
                 .collect(Collectors.toList());
         if (!otherMembers.isEmpty()) {
-            final String name = getUserName(getRandomEntry(otherMembers));
+            final String name = BrundoUtils.getUserName(getRandomEntry(otherMembers));
             messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort5", name));
             messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort6", name));
             messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort8", name));
@@ -46,11 +48,6 @@ public class CanIGoToBedCommand extends AbstractCommand {
             messages.add(BottiResourceBundle.getMessage("command.darfIchInsBett.antwort7"));
         }
         channel.sendMessage(getRandomEntry(messages)).queue();
-    }
-
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.darfIchInsBett.help");
     }
 
     @Override

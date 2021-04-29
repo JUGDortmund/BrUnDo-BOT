@@ -6,6 +6,7 @@ import eu.brundo.bot.achievements.TieWonAchievment;
 import eu.brundo.bot.data.Game;
 import eu.brundo.bot.data.TeamManager;
 import eu.brundo.bot.services.AchievementService;
+import eu.brundo.bot.util.BrundoUtils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.Executors;
 
 public class TieBreakCommand extends AbstractCommand {
 
-    private final static int MAX_SLEEP_TIME = 8_000;
+    private final static int MAX_SLEEP_TIME = 5_000;
 
     private final AchievementService achievementService;
 
@@ -32,96 +32,82 @@ public class TieBreakCommand extends AbstractCommand {
         final MessageChannel channel = event.getChannel();
         final List<Member> mentionedMembers = event.getMessage().getMentionedMembers();
         if (mentionedMembers.isEmpty()) {
-            channel.sendMessage("Du musst schon User angegeben zwischen denen ich entscheiden soll. Etwa so: '!tiebreak @User1 @User2'").queue();
+            sendMessage(channel, "command.tiebreak.fail1");
         } else if (mentionedMembers.size() == 1) {
-            channel.sendMessage("Es tut mir leid aber meine Schaltkreise bestehen nur aus Catan Schafen und können nicht mit gespaltenen Persönlichkeiten umgehen. Bitte gib wenigstens 2 User an zwischen denen ich vermitteln soll.  Etwa so: '!tiebreak @User1 @User2'").queue();
+            sendMessage(channel, "command.tiebreak.fail2");
         } else {
             final Random random = new Random(System.currentTimeMillis());
             final List<String> working = new ArrayList<>();
-            working.add("Ich befrage die klügsten aller " + TeamManager.getInstance().getRandomRace() + " um Rat...");
-            working.add("Ich sinniere auf einem Turm aus " + (random.nextInt(21) + 1) + " Würfeln um eine faire Lösung zu finden...");
-            working.add("Ich versuche eine Entscheidung durch einen W" + random.nextInt(100) + " zu erzwingen...");
-            working.add("Ich überlege ob Schnick-Schnack-Schnuck eine gute Lösung wäre...");
-            working.add("Ich erklimme den Spiele-Olymp um die " + TeamManager.getInstance().getRandomAdjective() + " Spielegötter um Rat zu fragen.");
-            working.add("Ich erbitte um Ratschläge bei den Ältesten der " + TeamManager.getInstance().getRandomRace() + "...");
-            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add("Hättet ihr nicht einfach eine Partie " + game.getName() + " spielen können anstatt mich zu fragen?"));
-            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add("Damals hat man sowas noch mit einer Partie" + game.getName() + " geklärt anstatt nen Bot damit zu belästigen..."));
+            working.add(translate("command.tiebreak.answerA1", TeamManager.getInstance().getRandomRace()));
+            working.add(translate("command.tiebreak.answerA2", (random.nextInt(21) + 1)));
+            working.add(translate("command.tiebreak.answerA3", (random.nextInt(100) + 1)));
+            working.add(translate("command.tiebreak.answerA4"));
+            working.add(translate("command.tiebreak.answerA5", TeamManager.getInstance().getRandomAdjective()));
+            working.add(translate("command.tiebreak.answerA6", TeamManager.getInstance().getRandomRace()));
+            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add(translate("command.tiebreak.answerA7", game.getName())));
+            Game.randomForPlayers(mentionedMembers.size()).ifPresent(game -> working.add(translate("command.tiebreak.answerA8", game.getName())));
             if (mentionedMembers.size() == 2) {
-                working.add("War ja wieder klar, dass " + getUserName(mentionedMembers.get(0)) + " und " + getUserName(mentionedMembers.get(1)) + " sich nicht einigen können...");
-                working.add("Hätten Bots mehr Rechte, dann würde ich ja einfach sagen \"Wenn 2 sich streiten, dann freut sich der dritte!\" Aber in diesem Fall bedeutet es nur Arbeit für mich...");
-                working.add("Also " + getUserName(mentionedMembers.get(0)) + " gibt " + getUserName(mentionedMembers.get(1)) + " die Schlossallee zurück und dafür zerreißt " + getUserName(mentionedMembers.get(1)) + " keine 1000 DM Scheine mehr! Oh, falsches Spiel. Dann brauch ich einen kleinen Moment...");
+                working.add(translate("command.tiebreak.answerA9", BrundoUtils.getUserName(mentionedMembers.get(0)), BrundoUtils.getUserName(mentionedMembers.get(1))));
+                working.add(translate("command.tiebreak.answerA10"));
+                working.add(translate("command.tiebreak.answerA11", BrundoUtils.getUserName(mentionedMembers.get(0)), BrundoUtils.getUserName(mentionedMembers.get(1))));
             }
-            working.add("Echt jetzt? Ihr seid " + mentionedMembers.size() + " Leute und schafft es nicht euch zu einigen???");
-            working.add("Ach Mensch... Ihr seid mir echt ein Haufen aus " + TeamManager.getInstance().getRandomAdjective() + " Gamern... Aber ich schau mal nach ner passenden Subrutine für euch.... Ganz unten...");
-            working.add("Klar! " + mentionedMembers.size() + " Spieler kommen nicht weiter und dann darf wieder der Bot einspringen und für die Gruppe von " + TeamManager.getInstance().getRandomAdjective() + " Spielern entscheiden..");
-            working.add("Schonmal drüber nachgedacht das einfach unter euch auszumachen? Auch warum auch, der Botti kann das ja ausbügeln...");
-
+            working.add(translate("command.tiebreak.answerA12", mentionedMembers.size()));
+            working.add(translate("command.tiebreak.answerA13", TeamManager.getInstance().getRandomAdjective()));
+            working.add(translate("command.tiebreak.answerA14", mentionedMembers.size(), TeamManager.getInstance().getRandomAdjective()));
+            working.add(translate("command.tiebreak.answerA15"));
 
             final List<String> sleeping = new ArrayList<>();
-            sleeping.add("Gib mir einen kleinen Moment.");
-            sleeping.add("Dann lass ich mal meine Schaltkreise warm laufen. Moment!");
-            sleeping.add("Sorry, dauert nen Moment. Bin aber sicher trotzdem deutlich schneller als ihr.");
+            sleeping.add(translate("command.tiebreak.answerB1"));
+            sleeping.add(translate("command.tiebreak.answerB2"));
+            sleeping.add(translate("command.tiebreak.answerB3"));
+            sendTranslatedMessage(channel, getRandomEntry(sleeping));
 
-            channel.sendMessage(sleeping.get(random.nextInt(sleeping.size()))).complete();
-            channel.sendTyping().complete();
-            Executors.newSingleThreadExecutor().submit(() -> {
-                try {
-                    Thread.sleep(random.nextInt(MAX_SLEEP_TIME));
-                    final int messageIndex = random.nextInt(working.size());
-                    channel.sendMessage(working.get(messageIndex)).complete();
-                    working.remove(messageIndex);
-                    channel.sendTyping().complete();
-                    int counter = 0;
-                    while (random.nextBoolean() && counter < 4) {
-                        Thread.sleep(random.nextInt(MAX_SLEEP_TIME));
-                        final List<String> again = new ArrayList<>();
-                        again.add("Nein, das hat leider nicht geholfen... Dann halt noch einmal von Vorne...");
-                        again.add("Und noch einmal das ganze. Hab sonst nichts zu tun...");
-                        again.add("Bei allen " + TeamManager.getInstance().getRandomAdjective() + " " + TeamManager.getInstance().getRandomRace() + " - Das hat leider nicht funktioniert. Ok, ich versuch mal was anderes...");
-                        again.add("Wär ja auch zu schön gewesen, wenn das geklappt hätte. Dann probieren wir mal was anderes.");
-                        again.add("Dann versuche ich es noch einmal. Bin ja zum Glück nur ein Bot und hab kein Privatleben das durch solche **WICHTIGEN** Endscheidungen gestört werden könnte...");
-                        channel.sendMessage(again.get(random.nextInt(again.size()))).complete();
-                        channel.sendTyping().complete();
-                        Thread.sleep(random.nextInt(MAX_SLEEP_TIME));
-                        channel.sendMessage(working.get(messageIndex)).complete();
-                        working.remove(messageIndex);
-                        counter++;
-                    }
-                    Thread.sleep(random.nextInt(MAX_SLEEP_TIME));
-                    final Member winner = mentionedMembers.get(random.nextInt(mentionedMembers.size()));
-                    final List<String> finalWinner = new ArrayList<>();
-                    finalWinner.add("Verneigt euch vor **" + getUserName(winner) + "** - Der erste User, der es nicht schafft, eine Spiel ohne Unentschieden zu \"gewinnen\". Aber ich hab nen guten Tag und erkläre ihn mal zum \"Sieger\"...");
-                    finalWinner.add("In all meiner Weisheit habe ich entschieden, dass **" + getUserName(winner) + "** dieses eine mal aus Mittleid von mir bevorzugt wird.");
-                    finalWinner.add("**" + getUserName(winner) + "** das hast du ganz Toll gemacht! Am Ende durch die Zufallentscheidung eines Bots gewonnen! Wow! WIe ich dich kenne wird jetzt erst einmal allen erzählt wie toll du warst.");
-                    finalWinner.add("Nicht das **" + getUserName(winner) + "** sich gleich wieder selbst voll abfeiert, aber leider muss ich mitteilen, dass ich als unparteiischer Bot diesen User zum Gewinner erkläre.");
-                    finalWinner.add("Mein Kniffel-Co-Prozessor hat erwürfelt, dass **" + getUserName(winner) + "** eigentlich garnicht besser war aber ausnahmsweise in diesem Fall gewonnen hat.");
-                    channel.sendMessage(finalWinner.get(random.nextInt(finalWinner.size()))).complete();
+            sendTyping(channel);
+            sleep(random.nextInt(MAX_SLEEP_TIME));
+            sendTranslatedMessage(channel, getAndRemoveRandomEntry(working));
+            sendTyping(channel);
+            int counter = 0;
+            while (random.nextBoolean() && counter < 4) {
+                sleep(random.nextInt(MAX_SLEEP_TIME));
+                final List<String> again = new ArrayList<>();
+                again.add(translate("command.tiebreak.answerC1"));
+                again.add(translate("command.tiebreak.answerC2"));
+                again.add(translate("command.tiebreak.answerC3", TeamManager.getInstance().getRandomAdjective(), TeamManager.getInstance().getRandomRace()));
+                again.add(translate("command.tiebreak.answerC4"));
+                again.add(translate("command.tiebreak.answerC5"));
+                sendTranslatedMessage(channel, getRandomEntry(again));
+                sendTyping(channel);
+                sleep(random.nextInt(MAX_SLEEP_TIME));
+                sendTranslatedMessage(channel, getAndRemoveRandomEntry(working));
+                sendTyping(channel);
+                counter++;
+            }
+            sleep(random.nextInt(MAX_SLEEP_TIME));
+            final Member winner = mentionedMembers.get(random.nextInt(mentionedMembers.size()));
+            final List<String> finalWinner = new ArrayList<>();
+            finalWinner.add(translate("command.tiebreak.answerD1", BrundoUtils.getUserName(winner)));
+            finalWinner.add(translate("command.tiebreak.answerD2", BrundoUtils.getUserName(winner)));
+            finalWinner.add(translate("command.tiebreak.answerD3", BrundoUtils.getUserName(winner)));
+            finalWinner.add(translate("command.tiebreak.answerD4", BrundoUtils.getUserName(winner)));
+            finalWinner.add(translate("command.tiebreak.answerD5", BrundoUtils.getUserName(winner)));
+            sendTranslatedMessage(channel, getRandomEntry(finalWinner));
 
-                    if (!achievementService.hasAchived(winner, new TieWonAchievment())) {
-                        achievementService.addAchievement(new TieWonAchievment(), winner);
-                    }
-                    if (mentionedMembers.size() == 2) {
-                        mentionedMembers.stream()
-                                .filter(member -> !Objects.equals(winner, member))
-                                .findAny()
-                                .ifPresent(looser -> {
-                                    if (!achievementService.hasAchived(looser, new TieLostAchievment())) {
-                                        achievementService.addAchievement(new TieLostAchievment(), looser);
-                                    }
-                                });
-                    }
+            if (!achievementService.hasAchived(winner, new TieWonAchievment())) {
+                achievementService.addAchievement(new TieWonAchievment(), winner);
+            }
+            if (mentionedMembers.size() == 2) {
+                mentionedMembers.stream()
+                        .filter(member -> !Objects.equals(winner, member))
+                        .findAny()
+                        .ifPresent(looser -> {
+                            if (!achievementService.hasAchived(looser, new TieLostAchievment())) {
+                                achievementService.addAchievement(new TieLostAchievment(), looser);
+                            }
+                        });
+            }
 
-                } catch (final Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
 
         }
-    }
-
-    @Override
-    public String getHelp() {
-        return "Ich kann dir helfen einen Gleichstand aufzulösen";
     }
 
     @Override

@@ -1,7 +1,6 @@
 package eu.brundo.bot.commands;
 
 import eu.brundo.bot.data.Game;
-import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -32,11 +31,6 @@ public class SuggestGameCommand extends AbstractCommand {
                 sendMessage(channel, "command.spiel.fail1");
             }
         }
-    }
-
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.spiel.help");
     }
 
     @Override
