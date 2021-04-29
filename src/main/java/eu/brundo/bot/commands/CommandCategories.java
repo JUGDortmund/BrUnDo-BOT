@@ -12,7 +12,7 @@ public enum CommandCategories implements Comparable<CommandCategories> {
         this.name = name;
     }
 
-    public String getName() {
+    public String getCategoryName() {
         return name;
     }
 }

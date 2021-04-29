@@ -3,24 +3,25 @@ package eu.brundo.bot.commands;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Random;
+public class WasGehtCommand extends AbstractCommand {
 
-public class Dice10Command extends AbstractCommand {
-
-    public Dice10Command() {
-        super("w10");
+    public WasGehtCommand() {
+        super("wasGeht");
     }
 
     @Override
     protected void onCommand(final MessageReceivedEvent event) {
         final MessageChannel channel = event.getChannel();
-        final Random random = new Random(System.currentTimeMillis());
-        final int value = random.nextInt(10) + 1;
-        sendMessage(channel, "command.w10.antwort", value);
+        sendTranslatedMessage(channel, "Na heute und morgen gehts ab!");
+    }
+
+    @Override
+    public String getHelp() {
+        return "Der Command zum 1. Mai";
     }
 
     @Override
     public CommandCategories getCategory() {
-        return CommandCategories.GAME_CATEGORY;
+        return CommandCategories.ADDITIONAL_CATEGORY;
     }
 }

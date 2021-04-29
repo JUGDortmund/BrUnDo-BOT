@@ -3,7 +3,6 @@ package eu.brundo.bot.commands;
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.MemberRepository;
-import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -37,12 +36,7 @@ public class AllowDataCollectionCommand extends AbstractCommand {
     public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
         return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
     }
-
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.allowDataCollection.help");
-    }
-
+    
     @Override
     public CommandCategories getCategory() {
         return CommandCategories.ACHIEVEMTENT_CATEGORY;

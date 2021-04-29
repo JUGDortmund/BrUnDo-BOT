@@ -15,6 +15,7 @@ public enum Game {
     WIZARD("Wizard", 3, 6, "https://boardgamearena.com/gamepanel?game=wizard"),
     SABOTEUR("Saboteur", 3, 10, "https://boardgamearena.com/gamepanel?game=saboteur"),
     GARLIC_PHONE("GarticPhone", 6, 14, "https://garticphone.com/de"),
+    MONSTER_FACTORY("Monster Factory", 2, 6, "https://boardgamearena.com/gamepanel?game=monsterfactory"),
     CODENAMES("Codenames", 6, 16, "https://codenames.game");
 
     private final String name;

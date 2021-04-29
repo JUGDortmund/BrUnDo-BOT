@@ -4,9 +4,12 @@ import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.achievements.AbstractAchievment;
 import eu.brundo.bot.achievements.AbstractCheckableAchievement;
 import eu.brundo.bot.achievements.AloneInTreffpunktAchievement;
+import eu.brundo.bot.achievements.DerKoljaAchievment;
 import eu.brundo.bot.achievements.FirstTimeInTreffpunktAchievement;
 import eu.brundo.bot.achievements.IntroducedAchievement;
+import eu.brundo.bot.achievements.MidnightPlayerAchievement;
 import eu.brundo.bot.achievements.MonopolyAchievment;
+import eu.brundo.bot.achievements.NightWatchAchievement;
 import eu.brundo.bot.achievements.PackPlayerAchievement;
 import eu.brundo.bot.achievements.PlayedAtAllTablesAchievement;
 import eu.brundo.bot.achievements.SitzfleischAchievement;
@@ -16,16 +19,16 @@ import eu.brundo.bot.achievements.TieWonAchievment;
 import eu.brundo.bot.entities.AchievementEntity;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.AchievementRepository;
+import eu.brundo.bot.util.BottiResourceBundle;
+import eu.brundo.bot.util.ChannelMessageSender;
+import eu.brundo.bot.util.TimeUtils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,7 +57,10 @@ public class AchievementService {
         achievements.add(new SitzfleischAchievement(mongoConnector));
         achievements.add(new TieLostAchievment());
         achievements.add(new TieWonAchievment());
+        achievements.add(new NightWatchAchievement(mongoConnector));
         achievements.add(new SpalterAchievment());
+        achievements.add(new MidnightPlayerAchievement(mongoConnector));
+        achievements.add(new DerKoljaAchievment());
     }
 
     public void checkAll(final List<Member> knownMembers) {
@@ -94,13 +100,15 @@ public class AchievementService {
             final AchievementEntity achievementEntity = achievementRepository.createEntity();
             achievementEntity.setAchievementId(achievement.getId());
             achievementEntity.setMember(memberEntity);
-            achievementEntity.setAchived(Date.from(ZonedDateTime.now(ZoneId.of("Europe/Berlin")).toInstant()));
+            achievementEntity.setAchived(TimeUtils.convertToDate(TimeUtils.nowInGermany()));
             achievementRepository.save(achievementEntity);
             LOG.info("User '{}' hat Erfolg '{}' freigeschaltet!", member.getEffectiveName(), achievement.getName());
 
-            final PrivateChannel privateChannel = member.getUser().openPrivateChannel().complete();
-            privateChannel.sendMessage("Herzlichen Glückwunsch, du hast ein Erfolg freigeschaltet :trophy: :trophy: :trophy:").complete();
-            privateChannel.sendMessage("**" + achievement.getName() + "** -> " + achievement.getDescription()).complete();
+            final String message = new StringBuilder().append(BottiResourceBundle.getMessage("dm.achievements.received"))
+                    .append(System.lineSeparator())
+                    .append("**" + achievement.getName() + "** -> " + achievement.getDescription())
+                    .toString();
+            ChannelMessageSender.sendTranslatedDirectMessage(member, message);
         }
     }
 
@@ -120,6 +128,21 @@ public class AchievementService {
     private Optional<AbstractAchievment> getAchievementById(final String id) {
         return achievements.stream()
                 .filter(achievement -> Objects.equals(achievement.getId(), id))
+                .findAny();
+    }
+
+    public List<Member> getAllMembersWithAchievments(final JDA jda) {
+        return achievementRepository.getAll().stream()
+                .map(achievement -> achievement.getMember())
+                .map(memberEntity -> findMemberById(jda, memberEntity.getDiscordId()).orElse(null))
+                .filter(member -> member != null)
+                .collect(Collectors.toList());
+    }
+
+    private Optional<Member> findMemberById(final JDA jda, final String id) {
+        return jda.getGuilds().stream()
+                .map(guild -> guild.retrieveMemberById(id).complete())
+                .filter(member -> member != null)
                 .findAny();
     }
 }

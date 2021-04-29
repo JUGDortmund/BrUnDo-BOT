@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -18,11 +17,6 @@ public class Dice6Command extends AbstractCommand {
         final Random random = new Random(System.currentTimeMillis());
         final int value = random.nextInt(6) + 1;
         sendMessage(channel, "command.w6.antwort", value);
-    }
-
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.w6.help");
     }
 
     @Override

@@ -4,15 +4,14 @@ import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.entities.ChannelSessionEntity;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.ChannelSessionRepository;
+import eu.brundo.bot.util.TimeUtils;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +51,8 @@ public class ChannelSessionService {
             if (channelJoin != null && Objects.equals(channelJoin.getChannelId(), channel.getId())) {
                 final ChannelSessionEntity entity = channelSessionRepository.createEntity();
                 entity.setChannelId(channel.getId());
-                entity.setStartTime(Date.from(channelJoin.getTimestamp().toInstant()));
-                entity.setEndTime(Date.from(ZonedDateTime.now(ZoneId.of("Europe/Berlin")).toInstant()));
+                entity.setStartTime(TimeUtils.convertToDate(channelJoin.getTimestamp()));
+                entity.setEndTime(TimeUtils.convertToDate(TimeUtils.nowInGermany()));
                 final MemberEntity memberEntity = memberService.getOrCreateMemberEntity(member);
                 entity.setMember(memberEntity);
                 channelSessionRepository.save(entity);
@@ -74,7 +73,7 @@ public class ChannelSessionService {
 
         public ChannelJoin(final String channelId) {
             this.channelId = channelId;
-            this.timestamp = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
+            this.timestamp = TimeUtils.nowInGermany();
         }
 
         public ZonedDateTime getTimestamp() {

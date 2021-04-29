@@ -14,7 +14,7 @@ public class AloneInTreffpunktAchievement extends AbstractCheckableAchievement {
     private final ChannelSessionService channelSessionService;
 
     public AloneInTreffpunktAchievement(final MongoConnector mongoConnector) {
-        super("AlleinInTreffpunkt", "AlleinAllein");
+        super("AlleinInTreffpunkt", 10);
         this.channelSessionService = new ChannelSessionService(mongoConnector);
     }
 
@@ -25,10 +25,5 @@ public class AloneInTreffpunktAchievement extends AbstractCheckableAchievement {
                 .map(voiceChannel -> voiceChannel.getMembers())
                 .orElse(Collections.emptyList());
         return members.size() == 1 && members.contains(member);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Einer muss den Anfang machen";
     }
 }

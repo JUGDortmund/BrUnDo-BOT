@@ -10,6 +10,7 @@ import eu.brundo.bot.commands.Dice10Command;
 import eu.brundo.bot.commands.Dice6Command;
 import eu.brundo.bot.commands.DisableDataCollectionCommand;
 import eu.brundo.bot.commands.HelpCommand;
+import eu.brundo.bot.commands.HighscoreCommand;
 import eu.brundo.bot.commands.ILikeBottiCommand;
 import eu.brundo.bot.commands.KapernCommand;
 import eu.brundo.bot.commands.QuoteCommand;
@@ -20,11 +21,15 @@ import eu.brundo.bot.commands.TeamCommand;
 import eu.brundo.bot.commands.TeamsCommand;
 import eu.brundo.bot.commands.TieBreakCommand;
 import eu.brundo.bot.commands.TimerCommand;
+import eu.brundo.bot.commands.WasGehtCommand;
+import eu.brundo.bot.commands.WizardSchummelnCommand;
 import eu.brundo.bot.listener.ChannelSessionListener;
 import eu.brundo.bot.listener.DebugEventListener;
+import eu.brundo.bot.listener.DerKoljaAchievmentListener;
 import eu.brundo.bot.listener.MonopolyAchievmentListener;
 import eu.brundo.bot.services.AchievementService;
 import eu.brundo.bot.services.MemberService;
+import eu.brundo.bot.util.TimeUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -67,6 +72,11 @@ public class DiscordBot {
         commands.add(new QuoteCommand());
         commands.add(new ShowAllAchievementsCommand(mongoConnector));
         commands.add(new ShowMyAchievementsCommand(mongoConnector));
+        commands.add(new WizardSchummelnCommand());
+        commands.add(new WasGehtCommand());
+        commands.add(new HighscoreCommand(jda, mongoConnector));
+
+
         commands.add(new AllowDataCollectionCommand(mongoConnector));
         commands.add(new DisableDataCollectionCommand(mongoConnector));
         commands.forEach(command -> jda.addEventListener(command));
@@ -74,12 +84,13 @@ public class DiscordBot {
         jda.addEventListener(new DebugEventListener());
         jda.addEventListener(new ChannelSessionListener(mongoConnector));
         jda.addEventListener(new MonopolyAchievmentListener(mongoConnector));
+        jda.addEventListener(new DerKoljaAchievmentListener(mongoConnector));
 
         Executors.newSingleThreadExecutor().submit(() -> {
             while (true) {
                 final List<Member> knownMembers = memberService.getAllMembers(jda);
                 achievementService.checkAll(knownMembers);
-
+                LOG.info("Servertime: {}", TimeUtils.nowInGermany());
                 try {
                     Thread.sleep(30_000);
                 } catch (final Exception e) {

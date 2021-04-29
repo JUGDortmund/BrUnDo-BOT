@@ -14,7 +14,7 @@ public class PlayedAtAllTablesAchievement extends AbstractCheckableAchievement {
     private final ChannelSessionService channelSessionService;
 
     public PlayedAtAllTablesAchievement(final MongoConnector mongoConnector) {
-        super("PlayedAtAllTables", "AllTablePlayer");
+        super("PlayedAtAllTables", 10);
         this.channelSessionService = new ChannelSessionService(mongoConnector);
     }
 
@@ -29,8 +29,4 @@ public class PlayedAtAllTablesAchievement extends AbstractCheckableAchievement {
                 .count() == 0;
     }
 
-    @Override
-    public String getDescription() {
-        return "Du bist an allen Tischen gewesen.";
-    }
 }

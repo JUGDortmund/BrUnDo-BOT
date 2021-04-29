@@ -1,6 +1,5 @@
 package eu.brundo.bot.commands;
 
-import eu.brundo.bot.util.BottiResourceBundle;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -28,7 +27,7 @@ public class HelpCommand extends AbstractCommand {
         Arrays.asList(CommandCategories.values())
                 .forEach(commandCategory -> {
                     textBuilder.append(System.lineSeparator());
-                    textBuilder.append("Alle Kommandos der Kategorie **" + commandCategory.name() + "**:");
+                    textBuilder.append(translate("command.botti.antwort2", commandCategory.getCategoryName()));
                     textBuilder.append(System.lineSeparator());
                     commands.stream()
                             .filter(command -> Objects.equals(command.getCategory(), commandCategory))
@@ -39,11 +38,6 @@ public class HelpCommand extends AbstractCommand {
                             });
                 });
         channel.sendMessage(textBuilder.toString()).queue();
-    }
-
-    @Override
-    public String getHelp() {
-        return BottiResourceBundle.getMessage("command.botti.help");
     }
 
     @Override

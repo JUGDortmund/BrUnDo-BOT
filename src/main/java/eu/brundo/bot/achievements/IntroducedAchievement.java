@@ -11,7 +11,7 @@ public class IntroducedAchievement extends AbstractCheckableAchievement {
     private final ChannelSessionService channelSessionService;
 
     public IntroducedAchievement(final MongoConnector mongoConnector) {
-        super("Introduced", "WieEinBunterHund");
+        super("Introduced", 10);
         this.channelSessionService = new ChannelSessionService(mongoConnector);
     }
 
@@ -24,8 +24,4 @@ public class IntroducedAchievement extends AbstractCheckableAchievement {
                 .isPresent();
     }
 
-    @Override
-    public String getDescription() {
-        return "Wir kennen dich";
-    }
 }

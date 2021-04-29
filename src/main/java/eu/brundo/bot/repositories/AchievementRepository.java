@@ -47,4 +47,11 @@ public class AchievementRepository {
             mongoConnector.getDatastore().merge(entity);
         }
     }
+
+    public List<AchievementEntity> getAll() {
+        return mongoConnector.getDatastore()
+                .find(AchievementEntity.class)
+                .iterator()
+                .toList();
+    }
 }
