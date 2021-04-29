@@ -2,6 +2,7 @@ package eu.brundo.bot.commands;
 
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.achievements.TieLostAchievment;
+import eu.brundo.bot.achievements.TieVsBottiAchievment;
 import eu.brundo.bot.achievements.TieWonAchievment;
 import eu.brundo.bot.data.Game;
 import eu.brundo.bot.data.TeamManager;
@@ -36,6 +37,11 @@ public class TieBreakCommand extends AbstractCommand {
         } else if (mentionedMembers.size() == 1) {
             sendMessage(channel, "command.tiebreak.fail2");
         } else {
+            if (mentionedMembers.size() == 2 && mentionedMembers.contains(event.getMember()) && mentionedMembers.stream().anyMatch(m -> Objects.equals("BrUnDo Botti", m.getNickname()))) {
+                if (!achievementService.hasAchived(event.getMember(), new TieVsBottiAchievment())) {
+                    achievementService.addAchievement(new TieVsBottiAchievment(), event.getMember());
+                }
+            }
             final Random random = new Random(System.currentTimeMillis());
             final List<String> working = new ArrayList<>();
             working.add(translate("command.tiebreak.answerA1", TeamManager.getInstance().getRandomRace()));
@@ -105,8 +111,6 @@ public class TieBreakCommand extends AbstractCommand {
                             }
                         });
             }
-
-
         }
     }
 

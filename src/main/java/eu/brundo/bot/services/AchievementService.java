@@ -16,6 +16,7 @@ import eu.brundo.bot.achievements.PlayedAtAllTablesAchievement;
 import eu.brundo.bot.achievements.SitzfleischAchievement;
 import eu.brundo.bot.achievements.SpalterAchievment;
 import eu.brundo.bot.achievements.TieLostAchievment;
+import eu.brundo.bot.achievements.TieVsBottiAchievment;
 import eu.brundo.bot.achievements.TieWonAchievment;
 import eu.brundo.bot.entities.AchievementEntity;
 import eu.brundo.bot.entities.MemberEntity;
@@ -63,6 +64,7 @@ public class AchievementService {
         achievements.add(new MidnightPlayerAchievement(mongoConnector));
         achievements.add(new DerKoljaAchievment());
         achievements.add(new NegativerBottiAchievment());
+        achievements.add(new TieVsBottiAchievment());
     }
 
     public void checkAll(final List<Member> knownMembers) {
@@ -73,7 +75,7 @@ public class AchievementService {
                         .filter(achievement -> achievement instanceof AbstractCheckableAchievement)
                         .map(achievement -> (AbstractCheckableAchievement) achievement)
                         .forEach(achievement -> {
-                            LOG.info("Checking Achievement: User '{}' Erfolg '{}'", member.getEffectiveName(), achievement.getName());
+                            LOG.debug("Checking Achievement: User '{}' Erfolg '{}'", member.getEffectiveName(), achievement.getName());
                             if (!achievementRepository.hasAchived(memberEntity, achievement.getId()) && achievement.achived(member)) {
                                 addAchievement(achievement, member);
                             }
