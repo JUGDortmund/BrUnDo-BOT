@@ -37,6 +37,11 @@ public class WizardSchummelnCommand extends AbstractCommand {
     }
 
     @Override
+    public boolean listInHelp() {
+        return false;
+    }
+
+    @Override
     public CommandCategories getCategory() {
         return CommandCategories.ADDITIONAL_CATEGORY;
     }

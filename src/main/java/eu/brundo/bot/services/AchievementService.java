@@ -9,6 +9,7 @@ import eu.brundo.bot.achievements.FirstTimeInTreffpunktAchievement;
 import eu.brundo.bot.achievements.IntroducedAchievement;
 import eu.brundo.bot.achievements.MidnightPlayerAchievement;
 import eu.brundo.bot.achievements.MonopolyAchievment;
+import eu.brundo.bot.achievements.NegativerBottiAchievment;
 import eu.brundo.bot.achievements.NightWatchAchievement;
 import eu.brundo.bot.achievements.PackPlayerAchievement;
 import eu.brundo.bot.achievements.PlayedAtAllTablesAchievement;
@@ -20,7 +21,7 @@ import eu.brundo.bot.entities.AchievementEntity;
 import eu.brundo.bot.entities.MemberEntity;
 import eu.brundo.bot.repositories.AchievementRepository;
 import eu.brundo.bot.util.BottiResourceBundle;
-import eu.brundo.bot.util.ChannelMessageSender;
+import eu.brundo.bot.util.BrundoUtils;
 import eu.brundo.bot.util.TimeUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
@@ -61,6 +62,7 @@ public class AchievementService {
         achievements.add(new SpalterAchievment());
         achievements.add(new MidnightPlayerAchievement(mongoConnector));
         achievements.add(new DerKoljaAchievment());
+        achievements.add(new NegativerBottiAchievment());
     }
 
     public void checkAll(final List<Member> knownMembers) {
@@ -108,7 +110,7 @@ public class AchievementService {
                     .append(System.lineSeparator())
                     .append("**" + achievement.getName() + "** -> " + achievement.getDescription())
                     .toString();
-            ChannelMessageSender.sendTranslatedDirectMessage(member, message);
+            BrundoUtils.sendTranslatedDirectMessage(member, message);
         }
     }
 

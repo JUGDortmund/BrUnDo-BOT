@@ -41,7 +41,7 @@ public class TeamsCommand extends AbstractCommand {
             final VoiceChannel voiceChannel = event.getJDA().getVoiceChannelById(brundoChannel.getId());
             final List<Member> members = new ArrayList<>(voiceChannel.getMembers());
             if (members.size() == 0) {
-                sendMessage(channel, "command.teams.fail2");
+                sendMessage(channel, "command.teams.fail2", brundoChannel.getName());
             } else {
                 Collections.shuffle(members);
                 final String countString = substring.substring(brundoChannel.getNick().length()).trim();

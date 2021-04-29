@@ -32,6 +32,7 @@ public class HelpCommand extends AbstractCommand {
                     commands.stream()
                             .filter(command -> Objects.equals(command.getCategory(), commandCategory))
                             .filter(command -> command.isAllowed(event.getMember(), event.getChannel()))
+                            .filter(command -> command.listInHelp())
                             .forEach(command -> {
                                 textBuilder.append("  **" + AbstractCommand.EXCLAMATION_MARK + command.getCommand() + "** -> " + command.getHelp());
                                 textBuilder.append(System.lineSeparator());
