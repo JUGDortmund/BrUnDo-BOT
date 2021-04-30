@@ -1,19 +1,14 @@
 package eu.brundo.bot.commands;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import eu.brundo.bot.AbstractCommand;
-import eu.brundo.bot.data.Quote;
 import eu.brundo.bot.data.QuoteManager;
 import eu.brundo.bot.entities.QuoteEntity;
 import eu.brundo.bot.util.BottiResourceBundle;
@@ -21,12 +16,10 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
- * 
  * The QuoteCommand class provides a !quote method to get multiple random quotes. It can be used to specify a specific type of quotes, e.g. !quote anhalter to only use quotes from the Hitchhiker's Guide to the Galaxy
- *
  */
 public class QuoteCommand extends AbstractCommand {
-	
+
 	private final static Logger LOG = LoggerFactory.getLogger(QuoteCommand.class);
 	private static final String RETURN_RANDOM_QUOTE = "command.quote.returnRandomQuote";
 	private static final String HELP = "command.quote.help";
@@ -76,10 +69,15 @@ public class QuoteCommand extends AbstractCommand {
 		}
 	}
 	
+	@Override
+    public CommandCategories getCategory() {
+        return CommandCategories.ADDITIONAL_CATEGORY;
+    }
+	
 	private QuoteEntity parseQuoteEntity(String quoteString) {
 		try {
 			Gson gson = new Gson();
-			return new QuoteEntity(gson.fromJson(quoteString, Quote.class));
+			//return new QuoteEntity(gson.fromJson(quoteString, Quote.class));
 		} catch (JsonSyntaxException ex) {
 			LOG.error(String.format("Json-Error while trying to parse the String %s", quoteString), ex);
 		}
@@ -97,5 +95,7 @@ public class QuoteCommand extends AbstractCommand {
 	private String[] getTokensFromCommand(String message) {
 		return StringUtils.split(message, SEPARATOR_CHAR, MAX_TOKENS);
 	}
+
+    
 
 }
