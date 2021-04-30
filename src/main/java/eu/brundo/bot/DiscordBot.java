@@ -69,7 +69,7 @@ public class DiscordBot {
         commands.add(new TieBreakCommand(mongoConnector));
         commands.add(new AboutDataCommand());
         commands.add(new ILikeBottiCommand());
-        commands.add(new QuoteCommand());
+        commands.add(new QuoteCommand(mongoConnector));
         commands.add(new ShowAllAchievementsCommand(mongoConnector));
         commands.add(new ShowMyAchievementsCommand(mongoConnector));
         commands.add(new WizardSchummelnCommand());

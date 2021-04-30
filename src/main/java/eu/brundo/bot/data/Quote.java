@@ -2,6 +2,8 @@ package eu.brundo.bot.data;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.brundo.bot.entities.QuoteEntity;
+
 /**
  * Simple class to hold quotes for easy serialization and deserialization
  *
@@ -21,6 +23,12 @@ public class Quote {
 		this.group = group;
 		this.quote = quote;
 		this.source = source;
+	}
+	
+	public Quote(QuoteEntity quoteEntity) {
+		this.group = quoteEntity.getGroup();
+		this.quote = quoteEntity.getQuote();
+		this.source = quoteEntity.getSource();
 	}
 	
 	/**
