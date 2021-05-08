@@ -1,0 +1,22 @@
+Immer wenn jemand "nein" sagt
+Immer wenn jemand "ja" sagt
+Immer wenn jemand lacht
+Immer wenn jemand "ähm" sagt
+Immer wenn jemand eine Frage stellt
+Immer wenn jemand deinen Namen sagt
+Immer wenn jemand neues in den Voice-Kanal kommt
+Immer wenn jemand den Voice-Kanal verlässt
+Immer wenn jemand flucht
+Immer wenn jemand aufs Klo muss
+Immer wenn jemand über Essen redet
+Immer wenn jemand "eins" sagt
+Immer wenn jemand "zwei" sagt
+Immer wenn jemand "drei" sagt
+Immer wenn jemand "Mai" sagt
+Immer wenn ein Spiel vorbei ist
+Immer wenn ein neues Spiel gestartet wird
+Immer wenn jemand etwas in die "quassel-zone" schreibt
+Immer wenn jemand ein Bild/Gif/Emoji in die "quassel-zone" postet
+Immer wenn jemand "Birgit" sagt
+Immer wenn jemand "Monopoly" sagt
+Immer wenn jemand "botti" sagt oder schreibt

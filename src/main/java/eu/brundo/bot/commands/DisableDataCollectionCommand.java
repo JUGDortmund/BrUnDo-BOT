@@ -33,11 +33,6 @@ public class DisableDataCollectionCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
-    }
-
-    @Override
     public CommandCategories getCategory() {
         return CommandCategories.ACHIEVEMTENT_CATEGORY;
     }
