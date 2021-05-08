@@ -31,11 +31,6 @@ public class AllowDataCollectionCommand extends AbstractCommand {
             sendMessage(channel, "command.allowDataCollection.fail");
         }
     }
-
-    @Override
-    public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
-    }
     
     @Override
     public CommandCategories getCategory() {

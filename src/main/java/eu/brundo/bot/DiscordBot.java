@@ -13,47 +13,41 @@ import eu.brundo.bot.commands.HelpCommand;
 import eu.brundo.bot.commands.HighscoreCommand;
 import eu.brundo.bot.commands.ILikeBottiCommand;
 import eu.brundo.bot.commands.KapernCommand;
+import eu.brundo.bot.commands.MissionAccomplishedCommand;
 import eu.brundo.bot.commands.QuoteCommand;
 import eu.brundo.bot.commands.ShowAllAchievementsCommand;
 import eu.brundo.bot.commands.ShowMyAchievementsCommand;
+import eu.brundo.bot.commands.StartMissionCommand;
 import eu.brundo.bot.commands.SuggestGameCommand;
 import eu.brundo.bot.commands.TeamCommand;
 import eu.brundo.bot.commands.TeamsCommand;
 import eu.brundo.bot.commands.TieBreakCommand;
 import eu.brundo.bot.commands.TimerCommand;
-import eu.brundo.bot.commands.WasGehtCommand;
 import eu.brundo.bot.commands.WizardSchummelnCommand;
 import eu.brundo.bot.listener.ChannelSessionListener;
-import eu.brundo.bot.listener.DebugEventListener;
 import eu.brundo.bot.listener.DerKoljaAchievmentListener;
 import eu.brundo.bot.listener.MonopolyAchievmentListener;
-import eu.brundo.bot.services.AchievementService;
-import eu.brundo.bot.services.MemberService;
-import eu.brundo.bot.util.TimeUtils;
+import eu.brundo.bot.tasks.AbstractTask;
+import eu.brundo.bot.tasks.AchievementCheck;
+import eu.brundo.bot.tasks.RandomChatting;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Member;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.hooks.EventListener;
 
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DiscordBot {
-
-    private final static Logger LOG = LoggerFactory.getLogger(DiscordBot.class);
 
     public DiscordBot(final String discordToken) throws LoginException {
         final JDABuilder builder = JDABuilder.createDefault(discordToken);
         builder.setActivity(Activity.playing("Monopoly"));
         final JDA jda = builder.build();
-
         final MongoConnector mongoConnector = new MongoConnector();
-        final MemberService memberService = new MemberService(mongoConnector);
-        final AchievementService achievementService = new AchievementService(mongoConnector);
 
         final List<AbstractCommand> commands = new ArrayList<>();
         commands.add(new Dice6Command());
@@ -73,30 +67,30 @@ public class DiscordBot {
         commands.add(new ShowAllAchievementsCommand(mongoConnector));
         commands.add(new ShowMyAchievementsCommand(mongoConnector));
         commands.add(new WizardSchummelnCommand());
-        commands.add(new WasGehtCommand());
+        commands.add(new StartMissionCommand());
+        commands.add(new MissionAccomplishedCommand(mongoConnector));
         commands.add(new HighscoreCommand(jda, mongoConnector));
-
-
         commands.add(new AllowDataCollectionCommand(mongoConnector));
         commands.add(new DisableDataCollectionCommand(mongoConnector));
-        commands.forEach(command -> jda.addEventListener(command));
-        jda.addEventListener(new HelpCommand(commands));
-        jda.addEventListener(new DebugEventListener());
-        jda.addEventListener(new ChannelSessionListener(mongoConnector));
-        jda.addEventListener(new MonopolyAchievmentListener(mongoConnector));
-        jda.addEventListener(new DerKoljaAchievmentListener(mongoConnector));
 
-        Executors.newSingleThreadExecutor().submit(() -> {
-            while (true) {
-                final List<Member> knownMembers = memberService.getAllMembers(jda);
-                achievementService.checkAll(knownMembers);
-                LOG.info("Servertime: {}", TimeUtils.nowInGermany());
-                try {
-                    Thread.sleep(30_000);
-                } catch (final Exception e) {
-                    throw new RuntimeException(e);
+        final List<EventListener> eventListeners = new ArrayList<>();
+        eventListeners.addAll(commands);
+        eventListeners.add(new HelpCommand(commands));
+        eventListeners.add(new ChannelSessionListener(mongoConnector));
+        eventListeners.add(new MonopolyAchievmentListener(mongoConnector));
+        eventListeners.add(new DerKoljaAchievmentListener(mongoConnector));
+        eventListeners.forEach(eventListener -> jda.addEventListener(eventListener));
+
+        final List<AbstractTask> tasks = new ArrayList<>();
+        tasks.add(new AchievementCheck(jda, mongoConnector));
+        tasks.add(new RandomChatting(jda, mongoConnector));
+        final ExecutorService executorService = Executors.newCachedThreadPool();
+        tasks.forEach(task -> {
+            executorService.submit(() -> {
+                while (true) {
+                    task.run();
                 }
-            }
+            });
         });
     }
 

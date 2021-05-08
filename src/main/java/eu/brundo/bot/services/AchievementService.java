@@ -15,6 +15,7 @@ import eu.brundo.bot.achievements.PackPlayerAchievement;
 import eu.brundo.bot.achievements.PlayedAtAllTablesAchievement;
 import eu.brundo.bot.achievements.SitzfleischAchievement;
 import eu.brundo.bot.achievements.SpalterAchievment;
+import eu.brundo.bot.achievements.SpielInDenMaiAchievment;
 import eu.brundo.bot.achievements.TieLostAchievment;
 import eu.brundo.bot.achievements.TieVsBottiAchievment;
 import eu.brundo.bot.achievements.TieWonAchievment;
@@ -65,6 +66,7 @@ public class AchievementService {
         achievements.add(new DerKoljaAchievment());
         achievements.add(new NegativerBottiAchievment());
         achievements.add(new TieVsBottiAchievment());
+        achievements.add(new SpielInDenMaiAchievment(mongoConnector));
     }
 
     public void checkAll(final List<Member> knownMembers) {

@@ -26,6 +26,8 @@ public class WizardSchummelnCommand extends AbstractCommand {
         answers.add("Newborger lenkt immer alle mit seinem ach-so-tollen Rang ab. Und wenn man dann nach unten zur Liste scrollt löscht er einfach wild Karten!");
         answers.add("Die Birgit hat der Michelle verboten mitzuspielen, damit die in der Zeit alle anderen Spieler ausspionieren kann");
         answers.add("Das kann ich dir nicht sagen aber der Kolja meint, dass BoardgamePunk der einzig ehrliche Spieler am Tisch ist.");
+        answers.add("Glaubt ihr etwa der Newborger ist auf die Rangliste gekommen, weil er so gut spielen kann? o__O");
+        answers.add("Das ist wieder so ein Menschen-Ding oder? Woher soll ich das bitte wissen?");
 
         final Random random = new Random(System.currentTimeMillis());
         sendTranslatedMessage(channel, getRandomEntry(answers));

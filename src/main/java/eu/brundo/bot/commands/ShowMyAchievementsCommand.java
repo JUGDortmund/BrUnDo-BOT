@@ -5,7 +5,6 @@ import eu.brundo.bot.achievements.AbstractAchievment;
 import eu.brundo.bot.services.AchievementService;
 import eu.brundo.bot.services.MemberService;
 import eu.brundo.bot.util.BrundoUtils;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -28,6 +27,7 @@ public class ShowMyAchievementsCommand extends AbstractCommand {
         final MessageChannel channel = event.getChannel();
         if (!memberService.isCollectingDataAllowed(event.getMember())) {
             sendMessage(channel, "command.myAchievements.fail1");
+            return;
         }
         final List<AbstractAchievment> achievements = achievementService.getAllForMember(event.getMember());
         if (!achievements.isEmpty()) {
@@ -41,11 +41,6 @@ public class ShowMyAchievementsCommand extends AbstractCommand {
         } else {
             sendMessage(channel, "command.myAchievements.fail2");
         }
-    }
-
-    @Override
-    public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
     }
 
     @Override

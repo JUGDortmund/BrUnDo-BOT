@@ -35,19 +35,19 @@ public class HighscoreCommand extends AbstractCommand {
         final MessageChannel channel = event.getChannel();
         final Set<Member> members = new HashSet<>(achievementService.getAllMembersWithAchievments(jda));
         final int count = Math.min(10, members.size());
-        sendMessage(channel, "command.highscore.answer", count, TeamManager.getInstance().getRandomAdjective(), TeamManager.getInstance().getRandomAdjective(), TeamManager.getInstance().getRandomRace());
+        final StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append(translate("command.highscore.answer", count, TeamManager.getInstance().getRandomAdjective(), TeamManager.getInstance().getRandomAdjective(), TeamManager.getInstance().getRandomRace()));
         members.stream()
                 .map(member -> {
                     final List<AbstractAchievment> achievments = achievementService.getAllForMember(member);
                     return new MemberAndAchievments(member, achievments);
                 }).sorted()
                 .limit(count)
-                .forEach(value -> sendTranslatedMessage(channel, BrundoUtils.getUserName(value.member) + " -> " + value.getPoints()));
-    }
-
-    @Override
-    public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
+                .forEach(value -> {
+                    messageBuilder.append(System.lineSeparator());
+                    messageBuilder.append(BrundoUtils.getUserName(value.member) + " -> " + value.getPoints());
+                });
+        sendTranslatedMessage(channel, messageBuilder.toString());
     }
 
     @Override

@@ -2,7 +2,6 @@ package eu.brundo.bot.commands;
 
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.services.AchievementService;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -22,11 +21,6 @@ public class ShowAllAchievementsCommand extends AbstractCommand {
         messageBuilder.append(translate("command.achievements.answer")).append(System.lineSeparator());
         achievementService.getAchievements().forEach(a -> messageBuilder.append("**" + a.getName() + "**: " + a.getDescription()).append(System.lineSeparator()));
         sendTranslatedMessage(channel, messageBuilder.toString());
-    }
-
-    @Override
-    public boolean isAllowed(final Member overviewRequester, final MessageChannel channel) {
-        return isBottiAdmin(overviewRequester) || isAdmin(overviewRequester);
     }
 
     @Override
