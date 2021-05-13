@@ -48,7 +48,13 @@ public abstract class AbstractCommand extends ListenerAdapter implements Compara
             if (isAllowed(event.getMember(), event.getChannel())) {
                 LOG.info("User {} executes command {}", BrundoUtils.getUserName(event), command);
                 sendTyping(event.getChannel());
-                COMMAND_EXECUTOR_SERVICE.submit(() -> onCommand(event));
+                COMMAND_EXECUTOR_SERVICE.submit(() -> {
+                    try {
+                        onCommand(event);
+                    } catch (final Exception e) {
+                        LOG.error("Error in calling command " + getCommand(), e);
+                    }
+                });
             } else {
                 LOG.info("User {} is not allowed to execute command {}", BrundoUtils.getUserName(event), command);
                 sendMessage(event.getChannel(), "commands.noPermission");

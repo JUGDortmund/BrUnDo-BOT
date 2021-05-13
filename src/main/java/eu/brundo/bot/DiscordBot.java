@@ -32,6 +32,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.EventListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DiscordBot {
+
+    private final static Logger LOG = LoggerFactory.getLogger(DiscordBot.class);
 
     public DiscordBot(final String discordToken) throws LoginException {
         final JDABuilder builder = JDABuilder.createDefault(discordToken);
@@ -84,7 +88,11 @@ public class DiscordBot {
         tasks.forEach(task -> {
             executorService.submit(() -> {
                 while (true) {
-                    task.run();
+                    try {
+                        task.run();
+                    } catch (final Exception exception) {
+                        LOG.error("Error while executing task!", exception);
+                    }
                 }
             });
         });

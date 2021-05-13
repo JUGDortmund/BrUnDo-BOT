@@ -4,15 +4,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 public class RandomCollection<E> {
 
     private final Collection<E> elements;
 
-    private Set<E> usedElements;
+    private final Set<E> usedElements;
 
     public RandomCollection(final Collection<E> elements) {
+        this.usedElements = new CopyOnWriteArraySet<>();
         this.elements = Collections.unmodifiableCollection(elements);
         if (elements.isEmpty()) {
             throw new IllegalStateException("Collection should not be empty");
