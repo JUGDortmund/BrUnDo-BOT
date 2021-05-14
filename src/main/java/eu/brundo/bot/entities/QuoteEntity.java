@@ -2,10 +2,12 @@ package eu.brundo.bot.entities;
 
 import org.bson.types.ObjectId;
 
+import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import eu.brundo.bot.data.Quote;
 
+@Entity("quoteEntity")
 public class QuoteEntity implements IdBasedEntity, WithMemberRelation {
 
 	public static final String MEMBER = "member";
