@@ -4,6 +4,7 @@ import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.achievements.TieLostAchievment;
 import eu.brundo.bot.achievements.TieVsBottiAchievment;
 import eu.brundo.bot.achievements.TieWonAchievment;
+import eu.brundo.bot.data.BadnessManager;
 import eu.brundo.bot.data.Game;
 import eu.brundo.bot.data.TeamManager;
 import eu.brundo.bot.services.AchievementService;
@@ -34,8 +35,10 @@ public class TieBreakCommand extends AbstractCommand {
         final List<Member> mentionedMembers = event.getMessage().getMentionedMembers();
         if (mentionedMembers.isEmpty()) {
             sendMessage(channel, "command.tiebreak.fail1");
+            BadnessManager.getInstance().increase(BrundoUtils.getUserName(event.getMember()), 5);
         } else if (mentionedMembers.size() == 1) {
             sendMessage(channel, "command.tiebreak.fail2");
+            BadnessManager.getInstance().increase(BrundoUtils.getUserName(event.getMember()), 5);
         } else {
             if (mentionedMembers.size() == 2 && mentionedMembers.contains(event.getMember()) && mentionedMembers.stream().anyMatch(m -> Objects.equals("BrUnDo Botti", m.getNickname()))) {
                 if (!achievementService.hasAchived(event.getMember(), new TieVsBottiAchievment())) {
@@ -111,6 +114,14 @@ public class TieBreakCommand extends AbstractCommand {
                             }
                         });
             }
+            if (BrundoUtils.getUserName(winner).toLowerCase().contains("botti")) {
+                BadnessManager.getInstance().decrease(BrundoUtils.getUserName(event.getMember()));
+                BadnessManager.getInstance().decrease(BrundoUtils.getUserName(event.getMember()));
+                BadnessManager.getInstance().decrease(BrundoUtils.getUserName(event.getMember()));
+            } else if (mentionedMembers.stream().anyMatch(m -> Objects.equals("BrUnDo Botti", m.getNickname()))) {
+                BadnessManager.getInstance().increase(BrundoUtils.getUserName(event.getMember()), 25);
+            }
+
         }
     }
 

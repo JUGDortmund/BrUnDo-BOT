@@ -38,6 +38,6 @@ public class RandomChatting extends AbstractTask {
     public void run() {
         sleep(1_000_000);
         channel.sendMessage(messages.get()).complete();
-        sleep(random.nextInt(14_000_000) + 2_000_000);
+        sleep(random.nextInt(24_000_000) + 4_000_000);
     }
 }

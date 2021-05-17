@@ -1,0 +1,36 @@
+[METADATA]
+name=test
+description=Dies ist ein test
+help=Dies ist ein test
+showInHelp=false
+onlyForAdmin=true
+-----------------------------------
+[IF: NO Member]
+message=bla
+increase-badness=10}
+decrease-badness=10}
+reached-achievement=BESTER-SPIELER
+------------------------------------
+[IF: 1 Member]
+message=Hallo {member}!
+message=Hier gibt es verschiedene Möglichkeiten wie ich antworte
+------------------------------------
+[IF: 2 Member]
+message=Hallo {member1} und {member2}!
+------------------------------------
+[IF: ANY Member & CONTAINS BOTTI]
+message=Hallo {member1} und {member2}!
+------------------------------------
+[IF: ANY Member & CONTAINS SENDER]
+message=Hallo {member1} und {member2}!
+------------------------------------
+[IF: ANY Member & NOT CONTAINS SENDER]
+message=Hallo {member1} und {member2}!
+------------------------------------
+[IF: ANY Member]
+message=Hallo {member1} und {member2}!
+senderDM=Hey {sender} danke für den Befehl...
+------------------------------------
+[DEFAULT]
+message=Wenn nix anderes passt werde ich ausgegeben
+------------------------------------

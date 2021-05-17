@@ -1,0 +1,12 @@
+[METADATA]
+name=gruss
+help=Botti sagt dir hi
+showInHelp=true
+onlyForAdmin=false
+-----------------------------------
+[IF: 1 MEMBER]
+message=Hey **{MEMBER}** der **{SENDER}** lässt dich grüßen
+------------------------------------
+[DEFAULT]
+message=Du musst mir schon sagen wen ich grüßen soll...
+------------------------------------

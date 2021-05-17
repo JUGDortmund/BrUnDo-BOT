@@ -1,0 +1,9 @@
+[METADATA]
+name=hello
+help=Botti sagt dir hallo
+showInHelp=true
+onlyForAdmin=false
+-----------------------------------
+[DEFAULT]
+message=Hallo {NEWLINE} :)
+------------------------------------

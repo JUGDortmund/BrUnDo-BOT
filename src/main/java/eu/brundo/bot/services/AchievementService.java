@@ -4,6 +4,8 @@ import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.achievements.AbstractAchievment;
 import eu.brundo.bot.achievements.AbstractCheckableAchievement;
 import eu.brundo.bot.achievements.AloneInTreffpunktAchievement;
+import eu.brundo.bot.achievements.BottiHatesYouAchievement;
+import eu.brundo.bot.achievements.BottiLikesYouAchievement;
 import eu.brundo.bot.achievements.DerKoljaAchievment;
 import eu.brundo.bot.achievements.FirstTimeInTreffpunktAchievement;
 import eu.brundo.bot.achievements.IntroducedAchievement;
@@ -66,6 +68,8 @@ public class AchievementService {
         achievements.add(new DerKoljaAchievment());
         achievements.add(new NegativerBottiAchievment());
         achievements.add(new TieVsBottiAchievment());
+        achievements.add(new BottiLikesYouAchievement());
+        achievements.add(new BottiHatesYouAchievement());
         achievements.add(new SpielInDenMaiAchievment(mongoConnector));
     }
 

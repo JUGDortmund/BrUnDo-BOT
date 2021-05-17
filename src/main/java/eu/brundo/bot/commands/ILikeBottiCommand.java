@@ -1,6 +1,8 @@
 package eu.brundo.bot.commands;
 
+import eu.brundo.bot.data.BadnessManager;
 import eu.brundo.bot.util.BottiResourceBundle;
+import eu.brundo.bot.util.BrundoUtils;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -27,6 +29,7 @@ public class ILikeBottiCommand extends AbstractCommand {
 
 
         sendTranslatedMessage(channel, getRandomEntry(messages));
+        BadnessManager.getInstance().decrease(BrundoUtils.getUserName(event.getMember()));
     }
 
     @Override

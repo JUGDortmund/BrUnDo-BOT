@@ -1,0 +1,9 @@
+[METADATA]
+name=hi
+help=Botti sagt dir hi
+showInHelp=true
+onlyForAdmin=false
+-----------------------------------
+[DEFAULT]
+message=Hi {SENDER}
+------------------------------------

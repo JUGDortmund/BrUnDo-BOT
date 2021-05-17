@@ -1,0 +1,11 @@
+[METADATA]
+name=zufall
+help=Botti sagt was
+showInHelp=true
+onlyForAdmin=false
+------------------------------------
+[DEFAULT]
+message=Hey **{SENDER}** manchmal sag ich dies
+message=aber auch das hier kann eine Antwort sein
+message=Oder das?
+------------------------------------

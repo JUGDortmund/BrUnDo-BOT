@@ -2,7 +2,9 @@ package eu.brundo.bot.listener;
 
 import eu.brundo.bot.MongoConnector;
 import eu.brundo.bot.achievements.MonopolyAchievment;
+import eu.brundo.bot.data.BadnessManager;
 import eu.brundo.bot.services.AchievementService;
+import eu.brundo.bot.util.BrundoUtils;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ public class MonopolyAchievmentListener extends ListenerAdapter {
             if (!achievementService.hasAchived(event.getMember(), new MonopolyAchievment())) {
                 achievementService.addAchievement(new MonopolyAchievment(), event.getMember());
             }
+            BadnessManager.getInstance().increase(BrundoUtils.getUserName(event.getMember()), 20);
         }
     }
 }

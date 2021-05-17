@@ -3,15 +3,18 @@ package eu.brundo.bot;
 import eu.brundo.bot.commands.AboutDataCommand;
 import eu.brundo.bot.commands.AbstractCommand;
 import eu.brundo.bot.commands.AllowDataCollectionCommand;
+import eu.brundo.bot.commands.BadnessCommand;
 import eu.brundo.bot.commands.CanIGoToBedCommand;
 import eu.brundo.bot.commands.CustomDice6Command;
 import eu.brundo.bot.commands.CuteDice6Command;
+import eu.brundo.bot.commands.DecreaseBadnessCommand;
 import eu.brundo.bot.commands.Dice10Command;
 import eu.brundo.bot.commands.Dice6Command;
 import eu.brundo.bot.commands.DisableDataCollectionCommand;
 import eu.brundo.bot.commands.HelpCommand;
 import eu.brundo.bot.commands.HighscoreCommand;
 import eu.brundo.bot.commands.ILikeBottiCommand;
+import eu.brundo.bot.commands.IncreaseBadnessCommand;
 import eu.brundo.bot.commands.KapernCommand;
 import eu.brundo.bot.commands.QuoteCommand;
 import eu.brundo.bot.commands.ShowAllAchievementsCommand;
@@ -25,6 +28,7 @@ import eu.brundo.bot.commands.WizardSchummelnCommand;
 import eu.brundo.bot.listener.ChannelSessionListener;
 import eu.brundo.bot.listener.DerKoljaAchievmentListener;
 import eu.brundo.bot.listener.MonopolyAchievmentListener;
+import eu.brundo.bot.listener.YoloListener;
 import eu.brundo.bot.tasks.AbstractTask;
 import eu.brundo.bot.tasks.AchievementCheck;
 import eu.brundo.bot.tasks.RandomChatting;
@@ -72,6 +76,22 @@ public class DiscordBot {
         commands.add(new HighscoreCommand(jda, mongoConnector));
         commands.add(new AllowDataCollectionCommand(mongoConnector));
         commands.add(new DisableDataCollectionCommand(mongoConnector));
+        commands.add(new BadnessCommand());
+        commands.add(new IncreaseBadnessCommand());
+        commands.add(new DecreaseBadnessCommand());
+
+//        final Parser parser = new Parser(new AchievementService(mongoConnector));
+//        try {
+//            commands.add(parser.parse(Paths.get(BadnessManager.class.getResource("/hello-command.txt").toURI())));
+//            commands.add(parser.parse(Paths.get(BadnessManager.class.getResource("/hi-command.txt").toURI())));
+//            commands.add(parser.parse(Paths.get(BadnessManager.class.getResource("/gruss-command.txt").toURI())));
+//            commands.add(parser.parse(Paths.get(BadnessManager.class.getResource("/zufall-command.txt").toURI())));
+//        } catch (final IOException e) {
+//            e.printStackTrace();
+//        } catch (final URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+
 
         final List<EventListener> eventListeners = new ArrayList<>();
         eventListeners.addAll(commands);
@@ -79,6 +99,7 @@ public class DiscordBot {
         eventListeners.add(new ChannelSessionListener(mongoConnector));
         eventListeners.add(new MonopolyAchievmentListener(mongoConnector));
         eventListeners.add(new DerKoljaAchievmentListener(mongoConnector));
+        eventListeners.add(new YoloListener());
         eventListeners.forEach(eventListener -> jda.addEventListener(eventListener));
 
         final List<AbstractTask> tasks = new ArrayList<>();
