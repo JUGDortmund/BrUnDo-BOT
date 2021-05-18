@@ -19,7 +19,7 @@ public class NightWatchAchievement extends AbstractCheckableAchievement {
     @Override
     public boolean achived(final Member member) {
         return channelSessionService.getAllSessionsForUser(member).stream()
-                .filter(session -> TimeUtils.convertToLocalDateTime(session.getStartTime()).getHour() > 22)
+                .filter(session -> TimeUtils.convertToLocalDateTime(session.getStartTime()).getHour() < 22)
                 .filter(session -> Duration.between(TimeUtils.convertToLocalDateTime(session.getStartTime()), TimeUtils.convertToLocalDateTime(session.getEndTime())).toHours() > 4)
                 .findAny()
                 .isPresent();
