@@ -22,7 +22,7 @@ public class RandomChatting extends AbstractTask {
 
     public RandomChatting(final JDA jda, final MongoConnector mongoConnector) {
         super(jda, mongoConnector);
-        final List<String> messagesList = IntStream.range(1, 37)
+        final List<String> messagesList = IntStream.range(1, 43)
                 .mapToObj(index -> BottiResourceBundle.getMessage("randomChatting.message" + index))
                 .collect(Collectors.toList());
         messages = new RandomCollection<>(messagesList);

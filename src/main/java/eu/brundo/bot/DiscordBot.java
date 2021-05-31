@@ -16,9 +16,12 @@ import eu.brundo.bot.commands.HighscoreCommand;
 import eu.brundo.bot.commands.ILikeBottiCommand;
 import eu.brundo.bot.commands.IncreaseBadnessCommand;
 import eu.brundo.bot.commands.KapernCommand;
+import eu.brundo.bot.commands.PennyCommand;
+import eu.brundo.bot.commands.PunkiCommand;
 import eu.brundo.bot.commands.QuoteCommand;
 import eu.brundo.bot.commands.ShowAllAchievementsCommand;
 import eu.brundo.bot.commands.ShowMyAchievementsCommand;
+import eu.brundo.bot.commands.SpitznameCommand;
 import eu.brundo.bot.commands.SuggestGameCommand;
 import eu.brundo.bot.commands.TeamCommand;
 import eu.brundo.bot.commands.TeamsCommand;
@@ -79,6 +82,9 @@ public class DiscordBot {
         commands.add(new BadnessCommand());
         commands.add(new IncreaseBadnessCommand());
         commands.add(new DecreaseBadnessCommand());
+        commands.add(new PennyCommand());
+        commands.add(new PunkiCommand());
+        commands.add(new SpitznameCommand());
 
 //        final Parser parser = new Parser(new AchievementService(mongoConnector));
 //        try {
